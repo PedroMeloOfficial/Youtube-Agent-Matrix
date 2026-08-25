@@ -1,0 +1,13 @@
+{
+  "_comment": "SHAPE REFERENCE ONLY - do not copy this file to config.json. The orchestrator creates workspace/config.json on first run, after asking which language every deliverable should be written in. Copying this file into place would skip that question and leave the pipeline with no language set. Every value is null on purpose: there is no default language, no default market and no default channel type. This documents only the key set the orchestrator writes - see skills/orchestrator/SKILL.md, Step 1.",
+  "output_language": null,
+  "output_language_name": null,
+  "channel_profile": null,
+  "channel_type_primary": null,
+  "channel_type_secondary": null,
+  "created_at": null,
+  "markets": {
+    "mix": null,
+    "source": null
+  }
+}

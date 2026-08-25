@@ -1,0 +1,11 @@
+{
+  "name": "youtube-agent-matrix",
+  "owner": { "name": "youtube-agent-matrix" },
+  "plugins": [
+    {
+      "name": "youtube-agent-matrix",
+      "source": "./",
+      "description": "Complete YouTube channel operating system: 15 specialized subagents + orchestrator, with approval gates and graceful data-source fallback."
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+# ---------------------------------------------------------------------------
+# Workspace — everything the matrix produces about a specific channel.
+# It is the creator's own material and never belongs in the plugin repository:
+# channel profiles, calendars, audits, scripts, competitor notes, and any
+# analytics they pasted in for one task.
+# ---------------------------------------------------------------------------
+workspace/*
+!workspace/.gitkeep
+!workspace/config.example.json
+
+# ---------------------------------------------------------------------------
+# Credentials — belt and braces. Nothing of the sort should ever be inside this
+# folder in the first place: API keys come from the environment, and OAuth
+# client secrets and cached tokens live in ~/.config/youtube-agent-matrix/.
+# These patterns exist so a stray file cannot be committed by accident.
+# ---------------------------------------------------------------------------
+*client_secret*.json
+*client-secret*.json
+*oauth*token*.json
+*credentials*.json
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.tox/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# ---------------------------------------------------------------------------
+# OS and editor artifacts
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
