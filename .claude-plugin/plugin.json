@@ -1,6 +1,6 @@
 {
   "name": "youtube-agent-matrix",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A complete YouTube channel operating system for Claude Code. Fourteen specialized subagents covering channel strategy, health audits, competitor intelligence, research, ideation, content calendars, hooks and retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics — coordinated by an orchestrator with human-approval gates. Works for any channel, any niche, any language.",
   "license": "MIT",
   "keywords": ["youtube", "creator", "seo", "retention", "thumbnail", "shorts", "monetization", "analytics", "content-strategy"]
