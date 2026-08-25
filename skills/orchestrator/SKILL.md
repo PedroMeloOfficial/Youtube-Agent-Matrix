@@ -21,7 +21,14 @@ Two rules govern everything below:
 
 ### Step 1 — Load or create the workspace config
 
-Read `${CLAUDE_PLUGIN_ROOT}/workspace/config.json`.
+Read `workspace/config.json`, resolved relative to the **current working directory** — i.e. the
+project folder the creator launched Claude Code from, not the plugin's own install location. This
+is deliberate: a creator running different channels from different project folders gets a
+separate `workspace/` per channel automatically. Never prefix a `workspace/` path with
+`${CLAUDE_PLUGIN_ROOT}` — that variable points at the plugin's installed/cached files
+(`agents/`, `references/`, `templates/`, `skills/`), which are read-only and shared across every
+channel. `workspace/` is the opposite: it is per-project, writable, and created fresh the first
+time this skill runs in a given folder.
 
 **If it does not exist, this is a first run.** Do the language setup *before* any other work,
 then continue with whatever the creator originally asked for.
@@ -260,7 +267,7 @@ Three gates, not seven. Everything that can run in parallel does.
 Every video gets exactly one folder, and **everything about that video lives inside it**:
 
 ```
-${CLAUDE_PLUGIN_ROOT}/workspace/videos/YYYY-MM-DD_<slug>/
+workspace/videos/YYYY-MM-DD_<slug>/
 ```
 
 - `YYYY-MM-DD` is the date the video **entered the pipeline**, not its publish date. Publish
