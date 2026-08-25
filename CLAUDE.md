@@ -252,15 +252,6 @@ rather than being filled in with guesses.
 
 ---
 
-## Commit convention
-
-When Claude Code makes the commit itself (rather than a human running `git commit` from a
-command it was handed), it appends its default `Co-Authored-By: Claude <noreply@anthropic.com>`
-trailer. That's expected and fine — it's how a maintained-with-Claude-Code project like
-[AgriciDaniel/claude-youtube](https://github.com/AgriciDaniel/claude-youtube), the project that
-inspired this one, ends up crediting Claude in its contributor graph. No action needed either way;
-just don't strip the trailer if you see it.
-
 ## Maintenance
 
 **Platform numbers decay.** YouTube changes what it counts, how it counts it and what it rewards,
