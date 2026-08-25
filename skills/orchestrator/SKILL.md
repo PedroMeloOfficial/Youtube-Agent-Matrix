@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: Complete YouTube channel operating system — routes work across 14 specialized subagents covering strategy, channel audits, competitor intelligence, research, idea generation, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work: growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
+description: Complete YouTube channel operating system — routes work across 14 specialized subagents covering strategy, channel audits, competitor intelligence, research, idea generation, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work — growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
 ---
 
 # YouTube Agent Matrix — Orchestrator
