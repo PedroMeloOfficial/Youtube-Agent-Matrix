@@ -14,9 +14,9 @@ Guidance for anyone (human or agent) editing this plugin. The user-facing docume
                         │  delegates with an explicit prompt
                         ▼
   Layer 2   agents/*.md
-            15 subagents. Each owns exactly one deliverable and knows how to
-            produce it. Agents do not call each other — the orchestrator fans
-            them out and collects results.
+            14 subagents. Each owns its deliverable — two of them also own a
+            derived creator-facing view of it, see below. Agents do not call
+            each other; the orchestrator fans them out and collects results.
                         │  loads, on demand, only what it needs
                         ▼
   Layer 3   references/*.md  +  templates/channel-types/*.md  +  templates/outputs/*
@@ -251,6 +251,32 @@ non-US dataset for them; `benchmarks.md` §11 lists that as a known gap, and it 
 rather than being filled in with guesses.
 
 ---
+
+## Derived creator-facing files
+
+Two deliverables ship in two versions, and the distinction is load-bearing:
+
+| Source of truth (agents read this) | Derived view (the creator reads this) | Owner |
+|---|---|---|
+| `script-{a\|b\|c}-*.md` | `script-recording.md` | `script-agent`, `recording` mode |
+| `workspace/channel-profile.md` | `workspace/channel-summary.md` | `channel-strategist` |
+
+Rules when touching either pair:
+
+1. **Only the source is ever read by an agent.** Nothing in the system may depend on a derived
+   file. If you find an agent reading one, that is the bug.
+2. **Same agent, same run.** Never split the pair across two agents or two invocations — that is
+   how they drift.
+3. **Derived files originate nothing.** Every statement traces to the source. A fact that exists
+   only in the derived view is a gap in the source; fill it there.
+4. **The formatting rules in the derived templates are functional requirements, not style.** No
+   asterisks, backticks, bracket markers, bold, or internal vocabulary. The templates state why.
+5. `script-recording.md` is generated **only for the variant approved at GATE 2**, never for all
+   three. Generating three would triple the cost of the most expensive agent in the matrix for
+   two files the creator will never open.
+
+Adding a third pair is a real decision, not a freebie: every derived file is another thing that
+can fall out of sync. Do it only when asked.
 
 ## Maintenance
 

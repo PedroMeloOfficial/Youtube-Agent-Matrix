@@ -21,14 +21,9 @@ Two rules govern everything below:
 
 ### Step 1 — Load or create the workspace config
 
-Read `workspace/config.json`, resolved relative to the **current working directory** — i.e. the
-project folder the creator launched Claude Code from, not the plugin's own install location. This
-is deliberate: a creator running different channels from different project folders gets a
-separate `workspace/` per channel automatically. Never prefix a `workspace/` path with
-`${CLAUDE_PLUGIN_ROOT}` — that variable points at the plugin's installed/cached files
-(`agents/`, `references/`, `templates/`, `skills/`), which are read-only and shared across every
-channel. `workspace/` is the opposite: it is per-project, writable, and created fresh the first
-time this skill runs in a given folder.
+Read `workspace/config.json`, **relative to the current working directory** — the project folder
+the creator launched from, never `${CLAUDE_PLUGIN_ROOT}` (that points at the plugin's read-only
+installed files, shared across every channel). This is what gives each channel its own workspace.
 
 **If it does not exist, this is a first run.** Do the language setup *before* any other work,
 then continue with whatever the creator originally asked for.
@@ -170,13 +165,13 @@ authoritative where they conflict.
 
 | Agent | Owns | Reads |
 |---|---|---|
-| `channel-strategist` | Positioning, pillars, audience, voice — writes the channel profile | benchmarks, algorithm, repurposing, localization, markets |
+| `channel-strategist` | Positioning, pillars, audience, voice — writes the channel profile **and its one-page summary** | benchmarks, algorithm, repurposing, localization, markets |
 | `channel-auditor` | Health score across SEO, performance, content, monetization | benchmarks, data-sources + lens refs: seo, thumbnail-ctr, analytics, algorithm, repurposing, monetization, localization, markets |
 | `competitor-analyst` | Competitive landscape, keyword and format gaps, outliers | benchmarks, seo, algorithm, data-sources, markets |
 | `research-agent` | Verified substance for one video: facts, angle gaps, discourse, sourceable visuals | benchmarks |
 | `ideation-agent` | Ranked, pitchable video ideas as idea cards | benchmarks, algorithm, seo, hook-library |
 | `calendar-agent` | Publishing calendar, production windows, pillar balance, seasonality | benchmarks, repurposing, markets |
-| `script-agent` | Hook options **and** full retention-engineered scripts, 3 variants | benchmarks, hook-library, retention, localization (non-English) |
+| `script-agent` | Hook options, 3 full retention-engineered script variants, **and** the clean recording script for the approved one | benchmarks, hook-library, retention, localization (non-English) |
 | `thumbnail-agent` | Thumbnail concepts + image-generation prompts (**English output**) | benchmarks, thumbnail-ctr |
 | `seo-agent` | Keyword strategy, title candidates, ranking approach | benchmarks, seo, localization, markets |
 | `metadata-agent` | Copy-paste upload package: title, description, tags, chapters, cards | benchmarks, seo, localization, markets |
@@ -193,7 +188,7 @@ authoritative where they conflict.
 
 | Command | Runs |
 |---|---|
-| `/yt setup` | Language + market config → `channel-strategist` → channel profile |
+| `/yt setup` | Language + market config → `channel-strategist` → channel profile + summary |
 | `/yt strategy` | `channel-strategist` |
 | `/yt audit` | `channel-auditor` (4 analysis lenses, parallel where supported) |
 | `/yt competitor [channel]` | `competitor-analyst` (4 analysis lenses, parallel where supported) |
@@ -202,6 +197,7 @@ authoritative where they conflict.
 | `/yt calendar` | `calendar-agent` |
 | `/yt hook <topic>` | `script-agent` in `hooks-only` mode |
 | `/yt script <idea>` | `script-agent` in `full` mode |
+| `/yt recording [variant]` | `script-agent` in `recording` mode — needs an approved variant |
 | `/yt thumbnail <video>` | `thumbnail-agent` |
 | `/yt seo <topic>` | `seo-agent` |
 | `/yt metadata <video>` | `metadata-agent` |
@@ -224,6 +220,7 @@ not interrogate the creator about it.
 | "I want to make a video about X" | **full chain** |
 | "write me a hook", "fix my intro", "first 30 seconds" | `script-agent` (`hooks-only`) |
 | "write the script" | `script-agent` (`full`) |
+| "clean version to read on camera", "recording script", "simplify the script" | `script-agent` (`recording`) — ask which variant if none is approved yet |
 | "improve my CTR", "design a thumbnail" | `thumbnail-agent` |
 | "title and description", "ready to upload" | `metadata-agent` |
 | "turn this into Shorts", "post this on TikTok" | `repurpose-agent` |
@@ -249,6 +246,8 @@ script-agent  ──▶  hooks.md + 3 variants: narrative / instructional / argu
       │
    ◆ GATE 2 — creator picks one variant
       │
+script-agent (recording mode) ──▶ script-recording.md — the clean version to read on camera
+      │
 thumbnail-agent + metadata-agent + shorts-agent   (parallel — all need only the script)
       │
    ◆ GATE 3 — creator approves the package
@@ -256,7 +255,8 @@ thumbnail-agent + metadata-agent + shorts-agent   (parallel — all need only th
 📦 production package written by you
 ```
 
-Three gates, not seven. Everything that can run in parallel does.
+Three gates, not seven. Everything that can run in parallel does — the recording script is the
+one deliberate exception, written first so the creator can start recording while packaging runs.
 
 ---
 
@@ -281,8 +281,8 @@ Create the folder the moment a video enters research. Never scatter a video's fi
 the folder name — rename it and every path in `_state.json` breaks.
 
 Channel-level artifacts live directly in `workspace/`, never inside a video folder:
-`config.json` · `channel-profile.md` · `calendar.md` · `audit-YYYY-MM-DD.md` · `competitors.md` ·
-`monetization-plan.md` · `analytics-YYYY-MM-DD.md`.
+`config.json` · `channel-profile.md` · `channel-summary.md` · `calendar.md` · `audit-YYYY-MM-DD.md` ·
+`competitors.md` · `monetization-plan.md` · `analytics-YYYY-MM-DD.md`.
 
 ### Contents of a video folder
 
@@ -297,6 +297,7 @@ Channel-level artifacts live directly in `workspace/`, never inside a video fold
 ├── script-a-narrative.md
 ├── script-b-instructional.md
 ├── script-c-argumentative.md
+├── script-recording.md          ← written after GATE 2, for the approved variant only
 ├── seo-package.md
 ├── thumbnail-brief.md
 ├── metadata-package.md
@@ -304,6 +305,22 @@ Channel-level artifacts live directly in `workspace/`, never inside a video fold
 ├── repurpose-plan.md
 └── production-package.md        ← the final deliverable
 ```
+
+### Two audiences, two files
+
+Most files here are written for **agents** — dense and structured, because a parser needs them
+that way. Two are also files a **human** has to use, one while a camera is running and one while
+deciding whether an idea fits the channel. For those, density is a defect.
+
+| Agent-facing (source of truth) | Creator-facing (derived view) | Written by |
+|---|---|---|
+| `script-{a\|b\|c}-*.md` | `script-recording.md` | `script-agent` |
+| `workspace/channel-profile.md` | `workspace/channel-summary.md` | `channel-strategist` |
+
+The derived file **restates, never decides**; agents always read the source. Both are written by
+the same agent in the same run — a drifted derived view is worse than none, since it is the one
+the creator reads. If the derived file needs something the source lacks, fix the source first.
+Do not create derived views for anything else unless asked.
 
 ### File ownership — one writer per file, always
 
@@ -317,14 +334,14 @@ This is what prevents one agent from silently overwriting another's work.
 | `_log.md` | append-only — every agent adds lines, none edits existing ones |
 | `research-dossier.md` | `research-agent` |
 | `idea-cards.md` | `ideation-agent` |
-| `hooks.md`, `script-*.md` | `script-agent` |
+| `hooks.md`, `script-*.md`, `script-recording.md` | `script-agent` |
 | `seo-package.md` | `seo-agent` |
 | `thumbnail-brief.md` | `thumbnail-agent` |
 | `metadata-package.md` | `metadata-agent` |
 | `shorts-plan.md` | `shorts-agent` |
 | `repurpose-plan.md` | `repurpose-agent` |
 | `production-package.md` | **orchestrator only** |
-| `workspace/channel-profile.md` | `channel-strategist` |
+| `workspace/channel-profile.md`, `workspace/channel-summary.md` | `channel-strategist` |
 | `workspace/calendar.md` | `calendar-agent` |
 | `workspace/audit-*.md` | `channel-auditor` |
 | `workspace/competitors.md` | `competitor-analyst` |
@@ -425,7 +442,8 @@ Three variants in workspace/videos/<slug>/
 Recommendation: C — [one-line reason].
 
 Reply A, B or C — or tell me what to change in any of them.
-Once you pick, I run thumbnail, metadata and Shorts in parallel.
+Once you pick, I write the clean recording version of it and
+run thumbnail, metadata and Shorts in parallel.
 ```
 
 **Always recommend, with a one-line reason.** The gate is for approval, not for offloading

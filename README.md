@@ -120,7 +120,7 @@ Explicit commands, when you already know what you want:
 
 | Command | Runs |
 |---|---|
-| `/yt setup` | Language + market config → `channel-strategist` → channel profile |
+| `/yt setup` | Language + market config → `channel-strategist` → channel profile + summary |
 | `/yt strategy` | `channel-strategist` |
 | `/yt audit` | `channel-auditor` (4 analysis lenses, parallel where supported) |
 | `/yt competitor [channel]` | `competitor-analyst` (4 analysis lenses, parallel where supported) |
@@ -177,6 +177,9 @@ record. Three gates, not seven, and everything that can run in parallel does.
     │  ◆ GATE 2 — you pick one variant                      │
     └───────────────────────────┬───────────────────────────┘
                                 │
+                     script-agent (recording mode)
+                     └─▶ script-recording.md — the version you read on camera
+                                │
           ┌─────────────────────┼─────────────────────┐
           ▼                     ▼                     ▼
    thumbnail-agent       metadata-agent          shorts-agent   (parallel)
@@ -200,13 +203,13 @@ verbatim — never the whole chain.
 
 | Agent | Owns |
 |---|---|
-| `channel-strategist` | Positioning, content pillars, audience definition, voice — writes the channel profile every other agent reads |
+| `channel-strategist` | Positioning, content pillars, audience definition, voice — writes the channel profile every other agent reads, plus the one-page summary you read |
 | `channel-auditor` | Scored channel health across SEO, performance, content and monetization, with the single highest-leverage fix named |
 | `competitor-analyst` | The competitive landscape: keyword gaps, format gaps, audience gaps, and which of their videos are outliers |
 | `research-agent` | Verified substance for one video — facts with sources, angle gaps, current discourse, sourceable visuals |
 | `ideation-agent` | Ranked, pitchable video ideas as idea cards, scored against the channel's own pillars |
 | `calendar-agent` | The publishing calendar: cadence, production windows, pillar balance, seasonality |
-| `script-agent` | Hook options across multiple frameworks, then three full retention-engineered script variants |
+| `script-agent` | Hook options across multiple frameworks, three full retention-engineered script variants, and the clean recording script for the one you approve |
 | `thumbnail-agent` | Thumbnail concepts and image-generation prompts (**English output**, see First run) |
 | `seo-agent` | Keyword strategy, title candidates, and a realistic ranking approach for this channel's size |
 | `metadata-agent` | The copy-paste upload package: title, description, tags, chapters, cards, end screens |
@@ -257,7 +260,8 @@ YoutubeAgents_Pipeline/
 │       └── quota_tracker.py     # daily quota ledger and pre-flight checks
 └── workspace/                   # everything the matrix produces about YOUR channel
     ├── config.json              # language, market, channel type (created on first run)
-    ├── channel-profile.md       # written by channel-strategist
+    ├── channel-profile.md       # written by channel-strategist — the full spec
+    ├── channel-summary.md       # the same thing in one readable page, for you
     ├── calendar.md, competitors.md, audit-<date>.md, monetization-plan.md
     └── videos/
         └── 2026-08-24_my-video-slug/    # one folder per video, dated on entry
@@ -267,6 +271,7 @@ YoutubeAgents_Pipeline/
             ├── research-dossier.md      ├── idea-cards.md
             ├── hooks.md                 ├── script-a-narrative.md
             ├── script-b-instructional.md├── script-c-argumentative.md
+            ├── script-recording.md      # the clean version you read on camera
             ├── seo-package.md           ├── thumbnail-brief.md
             ├── metadata-package.md      ├── shorts-plan.md
             └── production-package.md    # the final deliverable
@@ -289,6 +294,24 @@ Three files are the orchestrator's alone — `_state.json`, `_handoff.md` and th
 `production-package.md`. Subagents never touch them; they return results and the orchestrator
 persists. `_log.md` is the one shared file, and it is append-only: agents add lines, nobody edits
 existing ones.
+
+### Two versions of the things you actually read
+
+Most files here are written for the agents: dense, structured, full of markers and tables,
+because that is what makes them unambiguous to parse. That is deliberate and it stays.
+
+But two of those files are also files **you** have to use — one with a camera running, one while
+deciding whether an idea fits your channel. Density is a defect there. So each of them ships in
+two versions:
+
+| What the agents read | What you read |
+|---|---|
+| `script-a/b/c-*.md` — timestamps, `[B-ROLL:]`, `[INTERRUPT]`, beat claims, evidence traces | `script-recording.md` — what the scene is, then exactly what to say. No markup, no jargon. |
+| `channel-profile.md` — the full specification, every field, every test | `channel-summary.md` — one page of plain prose, under 500 words |
+
+The agent-facing file is always the source of truth. The readable one restates it and never
+decides anything on its own, both are written by the same agent in the same run, and the recording
+script is generated only for the variant you actually approve at Gate 2 — not for all three.
 
 ### Why `_handoff.md` and `_log.md` exist
 
@@ -406,6 +429,12 @@ briefly.
 fallback, and the fallback is specific: not "give me your data" but "Studio → Analytics →
 Overview, last 28 days, these five numbers." Degraded analysis is stated as degraded rather than
 quietly shipped as complete.
+
+**Dense for machines, readable for you.** The files agents parse and the files a person reads
+have opposite requirements, and trying to satisfy both in one document fails at both. So the
+script and the channel profile each ship twice — the full specification the agents consume, and a
+stripped, plain-language view for the human who has to act on it. The second is always derived
+from the first, never a second source of truth.
 
 **Markets are researched, not multiplied.** Every revenue figure in `benchmarks.md` is
 US-baseline. Rather than scaling it by a single fudge factor, each supported market gets its own
