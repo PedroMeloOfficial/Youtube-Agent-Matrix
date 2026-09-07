@@ -109,7 +109,9 @@ and the agent silently does not exist.
   Never printed — not in full, not masked;
 - checks `utils/quota_tracker.py` before an expensive call and records what it spent;
 - depends on nothing beyond the standard library plus `google-api-python-client` /
-  `google-auth-oauthlib`.
+  `google-auth-oauthlib`, with one exception: `build_reader_doc.py` uses `python-docx` when it
+  is present and falls back to `pandoc`, then to leaving the Markdown in place. An optional
+  dependency is only acceptable when its absence degrades the output rather than blocking it.
 
 Compile-check before committing:
 
@@ -258,8 +260,8 @@ Two deliverables ship in two versions, and the distinction is load-bearing:
 
 | Source of truth (agents read this) | Derived view (the creator reads this) | Owner |
 |---|---|---|
-| `script-{a\|b\|c}-*.md` | `script-recording.md` | `script-agent`, `recording` mode |
-| `workspace/channel-profile.md` | `workspace/channel-summary.md` | `channel-strategist` |
+| `script-{a\|b\|c}-*.md` | `script-recording.docx` | `script-agent`, `recording` mode |
+| `workspace/channel-profile.md` | `workspace/channel-summary.docx` | `channel-strategist` |
 
 Rules when touching either pair:
 
@@ -269,9 +271,16 @@ Rules when touching either pair:
    how they drift.
 3. **Derived files originate nothing.** Every statement traces to the source. A fact that exists
    only in the derived view is a gap in the source; fill it there.
-4. **The formatting rules in the derived templates are functional requirements, not style.** No
-   asterisks, backticks, bracket markers, bold, or internal vocabulary. The templates state why.
-5. `script-recording.md` is generated **only for the variant approved at GATE 2**, never for all
+4. **Derived views are Word documents.** The agent writes Markdown to the template, runs
+   `execution/build_reader_doc.py` on it, and the script renders the `.docx` and deletes the
+   Markdown. The templates' conventions are functional, not stylistic: in the recording script a
+   plain paragraph is a line to *say* and a `>` line is a line to *do*, and the converter renders
+   them differently so they cannot be confused on camera.
+5. **The converter is optional, like every integration here.** Without `python-docx` or `pandoc`
+   the conversion fails, the Markdown stays as the deliverable, and the agent passes on the install
+   command. It also never overwrites a document the creator has annotated — it compares the file's
+   hash against `.reader-docs.json` and writes `-v2` instead.
+6. `script-recording.docx` is generated **only for the variant approved at GATE 2**, never for all
    three. Generating three would triple the cost of the most expensive agent in the matrix for
    two files the creator will never open.
 

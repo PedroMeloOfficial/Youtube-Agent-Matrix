@@ -178,7 +178,7 @@ record. Three gates, not seven, and everything that can run in parallel does.
     └───────────────────────────┬───────────────────────────┘
                                 │
                      script-agent (recording mode)
-                     └─▶ script-recording.md — the version you read on camera
+                     └─▶ script-recording.docx — the version you read on camera
                                 │
           ┌─────────────────────┼─────────────────────┐
           ▼                     ▼                     ▼
@@ -261,7 +261,7 @@ YoutubeAgents_Pipeline/
 └── workspace/                   # everything the matrix produces about YOUR channel
     ├── config.json              # language, market, channel type (created on first run)
     ├── channel-profile.md       # written by channel-strategist — the full spec
-    ├── channel-summary.md       # the same thing in one readable page, for you
+    ├── channel-summary.docx     # the same thing in one readable page, for you
     ├── calendar.md, competitors.md, audit-<date>.md, monetization-plan.md
     └── videos/
         └── 2026-08-24_my-video-slug/    # one folder per video, dated on entry
@@ -271,7 +271,7 @@ YoutubeAgents_Pipeline/
             ├── research-dossier.md      ├── idea-cards.md
             ├── hooks.md                 ├── script-a-narrative.md
             ├── script-b-instructional.md├── script-c-argumentative.md
-            ├── script-recording.md      # the clean version you read on camera
+            ├── script-recording.docx    # the clean version you read on camera
             ├── seo-package.md           ├── thumbnail-brief.md
             ├── metadata-package.md      ├── shorts-plan.md
             └── production-package.md    # the final deliverable
@@ -306,12 +306,18 @@ two versions:
 
 | What the agents read | What you read |
 |---|---|
-| `script-a/b/c-*.md` — timestamps, `[B-ROLL:]`, `[INTERRUPT]`, beat claims, evidence traces | `script-recording.md` — what the scene is, then exactly what to say. No markup, no jargon. |
-| `channel-profile.md` — the full specification, every field, every test | `channel-summary.md` — one page of plain prose, under 500 words |
+| `script-a/b/c-*.md` — timestamps, `[B-ROLL:]`, `[INTERRUPT]`, beat claims, evidence traces | `script-recording.docx` — what the scene is, then exactly what to say. Stage direction in small grey italic so it can never be misread as a line to speak. |
+| `channel-profile.md` — the full specification, every field, every test | `channel-summary.docx` — one page of plain prose, under 500 words, ready to highlight and annotate |
 
 The agent-facing file is always the source of truth. The readable one restates it and never
 decides anything on its own, both are written by the same agent in the same run, and the recording
 script is generated only for the variant you actually approve at Gate 2 — not for all three.
+
+**They come out as Word files**, because Markdown is the wrong container for something you read
+with a camera running. This needs `python-docx` (`pip install python-docx`) or `pandoc` on your
+machine; without either, you get the same content as Markdown and a one-line install command. And
+if you have annotated a document by hand, regenerating never overwrites it — the new one is saved
+as `-v2` and the matrix tells you why.
 
 ### Why `_handoff.md` and `_log.md` exist
 
@@ -432,9 +438,10 @@ quietly shipped as complete.
 
 **Dense for machines, readable for you.** The files agents parse and the files a person reads
 have opposite requirements, and trying to satisfy both in one document fails at both. So the
-script and the channel profile each ship twice — the full specification the agents consume, and a
-stripped, plain-language view for the human who has to act on it. The second is always derived
-from the first, never a second source of truth.
+script and the channel profile each ship twice — the full specification the agents consume as
+Markdown, and a stripped, plain-language Word document for the human who has to act on it. The
+second is always derived from the first, never a second source of truth, and never something
+another agent reads.
 
 **Markets are researched, not multiplied.** Every revenue figure in `benchmarks.md` is
 US-baseline. Rather than scaling it by a single fudge factor, each supported market gets its own

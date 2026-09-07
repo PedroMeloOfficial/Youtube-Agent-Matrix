@@ -171,7 +171,7 @@ authoritative where they conflict.
 | `research-agent` | Verified substance for one video: facts, angle gaps, discourse, sourceable visuals | benchmarks |
 | `ideation-agent` | Ranked, pitchable video ideas as idea cards | benchmarks, algorithm, seo, hook-library |
 | `calendar-agent` | Publishing calendar, production windows, pillar balance, seasonality | benchmarks, repurposing, markets |
-| `script-agent` | Hook options, 3 full retention-engineered script variants, **and** the clean recording script for the approved one | benchmarks, hook-library, retention, localization (non-English) |
+| `script-agent` | Hook options, 3 full retention-engineered script variants, **and** the clean recording document for the approved one | benchmarks, hook-library, retention, localization (non-English) |
 | `thumbnail-agent` | Thumbnail concepts + image-generation prompts (**English output**) | benchmarks, thumbnail-ctr |
 | `seo-agent` | Keyword strategy, title candidates, ranking approach | benchmarks, seo, localization, markets |
 | `metadata-agent` | Copy-paste upload package: title, description, tags, chapters, cards | benchmarks, seo, localization, markets |
@@ -246,7 +246,7 @@ script-agent  ──▶  hooks.md + 3 variants: narrative / instructional / argu
       │
    ◆ GATE 2 — creator picks one variant
       │
-script-agent (recording mode) ──▶ script-recording.md — the clean version to read on camera
+script-agent (recording mode) ──▶ script-recording.docx — the version read on camera
       │
 thumbnail-agent + metadata-agent + shorts-agent   (parallel — all need only the script)
       │
@@ -281,7 +281,7 @@ Create the folder the moment a video enters research. Never scatter a video's fi
 the folder name — rename it and every path in `_state.json` breaks.
 
 Channel-level artifacts live directly in `workspace/`, never inside a video folder:
-`config.json` · `channel-profile.md` · `channel-summary.md` · `calendar.md` · `audit-YYYY-MM-DD.md` ·
+`config.json` · `channel-profile.md` · `channel-summary.docx` · `calendar.md` · `audit-YYYY-MM-DD.md` ·
 `competitors.md` · `monetization-plan.md` · `analytics-YYYY-MM-DD.md`.
 
 ### Contents of a video folder
@@ -297,7 +297,7 @@ Channel-level artifacts live directly in `workspace/`, never inside a video fold
 ├── script-a-narrative.md
 ├── script-b-instructional.md
 ├── script-c-argumentative.md
-├── script-recording.md          ← written after GATE 2, for the approved variant only
+├── script-recording.docx        ← written after GATE 2, for the approved variant only
 ├── seo-package.md
 ├── thumbnail-brief.md
 ├── metadata-package.md
@@ -314,13 +314,19 @@ deciding whether an idea fits the channel. For those, density is a defect.
 
 | Agent-facing (source of truth) | Creator-facing (derived view) | Written by |
 |---|---|---|
-| `script-{a\|b\|c}-*.md` | `script-recording.md` | `script-agent` |
-| `workspace/channel-profile.md` | `workspace/channel-summary.md` | `channel-strategist` |
+| `script-{a\|b\|c}-*.md` | `script-recording.docx` | `script-agent` |
+| `workspace/channel-profile.md` | `workspace/channel-summary.docx` | `channel-strategist` |
 
 The derived file **restates, never decides**; agents always read the source. Both are written by
 the same agent in the same run — a drifted derived view is worse than none, since it is the one
 the creator reads. If the derived file needs something the source lacks, fix the source first.
 Do not create derived views for anything else unless asked.
+
+Both derived views are **Word documents**, built by `execution/build_reader_doc.py` from a
+short-lived Markdown file the agent writes and the script deletes. Markdown is the wrong container
+for something read with a camera running or annotated by hand. If neither `python-docx` nor
+`pandoc` is installed the conversion fails, the Markdown stays as the deliverable, and the agent
+passes on the install command — the format degrades, the pipeline does not.
 
 ### File ownership — one writer per file, always
 
@@ -334,14 +340,14 @@ This is what prevents one agent from silently overwriting another's work.
 | `_log.md` | append-only — every agent adds lines, none edits existing ones |
 | `research-dossier.md` | `research-agent` |
 | `idea-cards.md` | `ideation-agent` |
-| `hooks.md`, `script-*.md`, `script-recording.md` | `script-agent` |
+| `hooks.md`, `script-*.md`, `script-recording.docx` | `script-agent` |
 | `seo-package.md` | `seo-agent` |
 | `thumbnail-brief.md` | `thumbnail-agent` |
 | `metadata-package.md` | `metadata-agent` |
 | `shorts-plan.md` | `shorts-agent` |
 | `repurpose-plan.md` | `repurpose-agent` |
 | `production-package.md` | **orchestrator only** |
-| `workspace/channel-profile.md`, `workspace/channel-summary.md` | `channel-strategist` |
+| `workspace/channel-profile.md`, `workspace/channel-summary.docx` | `channel-strategist` |
 | `workspace/calendar.md` | `calendar-agent` |
 | `workspace/audit-*.md` | `channel-auditor` |
 | `workspace/competitors.md` | `competitor-analyst` |
@@ -442,7 +448,7 @@ Three variants in workspace/videos/<slug>/
 Recommendation: C — [one-line reason].
 
 Reply A, B or C — or tell me what to change in any of them.
-Once you pick, I write the clean recording version of it and
+Once you pick, I build the recording document for it and
 run thumbnail, metadata and Shorts in parallel.
 ```
 
@@ -509,6 +515,7 @@ The matrix works with zero credentials. Every integration degrades gracefully.
 | YouTube Analytics API (OAuth) | Private analytics for their own channel | Ask for a Studio screenshot or the metrics in text |
 | DataForSEO MCP | Search volume, YouTube SERP, keyword difficulty, trends | WebSearch |
 | Image-generation MCP (Nano Banana / Gemini) | Actual thumbnail images | Text prompts the creator pastes into any generator |
+| `python-docx` or `pandoc` (local) | The recording script and channel summary as Word documents | The same content as Markdown, with the install command named |
 
 **Detection:** try the call. If it fails, fall back and say so in one line. **Never block a
 workflow because an integration is missing.** Full setup in `references/data-sources.md`.

@@ -2,44 +2,54 @@
 
 > Fill in OUTPUT LANGUAGE. Section headings may be translated.
 >
-> **This is the creator-facing view of `channel-profile.md`.** It is a *derived* file: everything
-> here restates a decision already recorded in the full profile, which stays the source of truth
-> and the file every agent reads. Never decide anything here. If something needs to change, change
-> `channel-profile.md` first, then regenerate this file.
+> **The deliverable is `workspace/channel-summary.docx`, not this file.** You write this Markdown,
+> run `execution/build_reader_doc.py` on it, and the Markdown is deleted. The creator only ever
+> opens the Word document, where the conventions below have become real formatting they can
+> highlight and annotate.
 >
-> **The test this file has to pass:** the creator reads it in two minutes and can say out loud
-> what their channel is, who it is for, and what they are and are not allowed to make.
+> **This is the creator-facing view of `channel-profile.md`.** Everything here restates a decision
+> already recorded in the full profile, which stays the source of truth and the file every agent
+> reads. Never decide anything here. If something needs to change, change `channel-profile.md`
+> first, then regenerate.
+>
+> **The test it has to pass:** the creator reads it in two minutes and can say out loud what their
+> channel is, who it is for, and what they are and are not allowed to make.
 
-## Formatting rules for this file — they are the point
+## How the converter reads this file
 
-The full profile is dense because every other agent parses it. This one is read by a person, usually
-on a phone, usually while deciding something. So:
+| You write | The creator sees |
+|---|---|
+| `## Section` | Section heading |
+| plain paragraph | Reading-size body text |
+| `- item` | A real bullet |
+| `**word**` | Real bold |
+| `\| a \| b \|` | A real table |
 
-- **No markup characters in the body.** No asterisks, no backticks, no bold, no italics, no
-  bracket markers, no emoji.
-- **At most one table**, and only for the pillars, where a list genuinely reads worse.
+## Content rules
+
 - **Plain prose in short paragraphs.** Where the full profile has a nine-column table, this has
   three sentences.
+- **One table only**, for the pillars, where a list genuinely reads worse.
 - **No jargon from the system.** "Archetype", "size tier", "traffic surface", "job", "unfair
   advantage" are internal vocabulary. Say the thing itself.
 - **One page.** Under 500 words, and shorter is better. Anything that does not change a decision
   the creator makes gets cut — it is still in the full profile.
-- Nothing marked ⟨TBD⟩ in the full profile appears here at all. An empty field is noise to a
-  reader; silently leave it out and let the full profile carry the gap.
+- **Nothing marked `⟨TBD⟩` appears here at all.** An empty field is noise to a reader; leave it out
+  silently and let the full profile carry the gap.
 
 ---
 
 # ⟨CHANNEL NAME⟩
 
-⟨One sentence: what this channel is. Derived from the positioning sentence, but written the way
-the creator would say it to a friend, not in the required "I do X for Y because Z" shape.⟩
+⟨One sentence: what this channel is. Derived from the positioning sentence, but written the way the
+creator would say it to a friend, not in the required "I do X for Y because Z" shape.⟩
 
 ## Who it is for
 
 ⟨Two or three sentences. Who watches, what they already watch, what they are hoping to feel or be
-able to do. Drawn from §4 of the full profile.⟩
+able to do. From §4 of the full profile.⟩
 
-⟨One sentence on what makes them leave — this is the most useful line in the file and the one most
+⟨One sentence on what makes them leave — the most useful line in the document, and the one most
 worth keeping blunt.⟩
 
 ## What makes it different
@@ -66,8 +76,8 @@ its own paragraph rather than a column in a table.⟩
 
 ## The rhythm
 
-⟨One or two sentences: how often long-form, how often Shorts, how long videos run, and what the
-real production limit is — the hours available, not an aspiration.⟩
+⟨One or two sentences: how often long-form, how often Shorts, how long videos run, and what the real
+production limit is — the hours available, not an aspiration.⟩
 
 ## What is in the way
 
@@ -81,18 +91,17 @@ the queue is empty.⟩
 
 ---
 
-The full version, with the reasoning, the research and everything the agents read, is in the
-file named channel-profile in this same folder.
+⟨One closing line pointing at the full profile by name, for when the creator wants the reasoning
+and the research behind any of this.⟩
 
 ---
 
-## Self-check
+## Self-check — run before converting, then delete this section
 
-- [ ] Every statement here traces to a decision already in `channel-profile.md` — nothing new
-- [ ] No asterisks, backticks, bold, italics or bracket markers anywhere in the body
+- [ ] Every statement traces to a decision already in `channel-profile.md` — nothing new
 - [ ] No internal vocabulary — a reader who has never seen this system understands every word
 - [ ] Under 500 words
-- [ ] Only one table, and only for the pillars
-- [ ] Nothing marked ⟨TBD⟩ in the full profile appears here
-- [ ] The "what they never do" paragraph is present and specific
+- [ ] Only one table, for the pillars
+- [ ] Nothing marked `⟨TBD⟩` appears
+- [ ] The "what it never does" paragraph is present and specific
 - [ ] Written in OUTPUT LANGUAGE
