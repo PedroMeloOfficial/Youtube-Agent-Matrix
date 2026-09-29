@@ -14,7 +14,7 @@ Guidance for anyone (human or agent) editing this plugin. The user-facing docume
                         │  delegates with an explicit prompt
                         ▼
   Layer 2   agents/*.md
-            14 subagents. Each owns its deliverable — two of them also own a
+            15 subagents. Each owns its deliverable — two of them also own a
             derived creator-facing view of it, see below. Agents do not call
             each other; the orchestrator fans them out and collects results.
                         │  loads, on demand, only what it needs
@@ -138,7 +138,7 @@ bug — it will be wrong for every other user.
 4. Grant the minimum `tools`. Only agents that fan out internally need `Agent`. Only agents that
    run the execution layer need `Bash`.
 5. Name the reference files it should load, specifically. "Load what you need" makes an agent
-   load all thirteen.
+   load all fourteen.
 6. State its output contract: exact filename, exact sections, where it writes in
    `workspace/videos/<slug>/` or `workspace/`.
 7. Register it in three places, or it is invisible:

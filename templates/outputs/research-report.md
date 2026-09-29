@@ -6,71 +6,111 @@
 > `execution/build_reader_doc.py` on it, and the Markdown is deleted. What the creator publishes
 > and links from the video description is the Word document.
 >
-> Standard this follows: `references/research-report-standard.md`. Read it before writing a word
-> — the citation format and the source-tier rules are there, not repeated here.
+> Standard: `references/research-report-standard.md`. Read all of it before writing — the thesis
+> and claim map (§2), data discipline (§4), evidence strength (§5) and the citation audit (§8) are
+> there, not repeated here.
 
 ## How the converter reads this file
 
 | You write | The reader sees |
 |---|---|
 | `# Title` | Document title |
-| `## Heading` | Section heading |
+| `## Heading` / `### Sub-heading` | Section headings |
 | plain paragraph | Body text |
-| `**word**` | Real bold |
-| `- item` | A real bullet |
-| `\| a \| b \|` | A real table |
+| `**word**` / `*word*` | Real bold / italics (italicise standalone titles in references) |
+| `- item` / `1. item` | Real bullets / numbered list |
+| `\| a \| b \|` | A real table with a header row — use for every set of 3+ comparable figures |
 
-No `>` stage-direction lines in this document — that convention belongs to the recording script.
-Everything here is prose meant to be read, not performed.
+No `>` lines in this document — that convention belongs to the recording script. No images or
+charts: the converter cannot embed them, so data goes in tables.
 
 ---
 
-⟨Creator or channel name⟩ · ⟨Date⟩ · Written to accompany "⟨video working title⟩"
+⟨Creator or channel name⟩ · ⟨Date⟩ · Accompanies the video "⟨video working title⟩"
+
+**Thesis:** ⟨One declarative, falsifiable sentence.⟩
 
 ## Summary
 
-⟨120–180 words: the claim this report argues, and why it matters. Standalone — a reader who stops
-here still has the point.⟩
+⟨150–250 words: the thesis, the two or three strongest pieces of evidence with their numbers, and
+the main limitation. A reader who stops here has the argument.⟩
 
-## ⟨Section 1 — name the angle, not "Section 1"⟩
+## Background
 
-⟨Sourced prose. Every claim that isn't common knowledge carries an in-text citation per
-`research-report-standard.md` §3. Close with one sentence tying this section back to the report's
-argument.⟩
+⟨Only what a stranger needs to follow the argument.⟩
 
-## ⟨Section 2 — repeat per angle the creator's brief named⟩
+| Date | Event | Why it matters here | Source |
+|---|---|---|---|
+| ⟨YYYY-MM⟩ | ⟨event⟩ | ⟨one line⟩ | ⟨(Author, Year)⟩ |
 
-⟨Same discipline.⟩
+*(Keep the chronology table only when history is part of the argument.)*
+
+## ⟨Evidence section — named for the claim it establishes⟩
+
+**Claim:** ⟨the supporting claim this section establishes⟩
+
+⟨Sourced prose. Every figure: value, unit, currency, period, reported/measured/estimated, scope.
+Direct evidence, proxy and inference visibly distinct.⟩
+
+| ⟨Metric⟩ | ⟨Period A⟩ | ⟨Period B⟩ | Status | Source |
+|---|---|---|---|---|
+| ⟨…⟩ | ⟨value + unit⟩ | ⟨value + unit⟩ | ⟨reported / estimated by X⟩ | ⟨(Author, Year)⟩ |
+
+**What this establishes:** ⟨one line for the thesis⟩ — **and what it does not:** ⟨one line⟩
+
+*(Repeat per supporting claim in the claim map.)*
+
+## Case study: ⟨subject⟩
+
+*(Only when the brief names one.)*
+
+⟨Context · the decision taken · the measurable outcome, with numbers · what it demonstrates · what
+it cannot demonstrate.⟩
+
+## Counterarguments
+
+### ⟨Objection 1, stated at full strength⟩
+
+⟨Who makes it, cited. Then the evidence that answers it — or an explicit concession.⟩
+
+### ⟨Objection 2⟩
+
+⟨Same.⟩
 
 ## Discussion
 
-⟨Where the sections meet. This is the one place the report may argue a point of view — the
-creator's own read of the evidence above, stated plainly and legibly as an interpretation, not
-smuggled in as another sourced fact.⟩
+⟨The inference chain: how the sections add up to the thesis, each step labelled as direct
+evidence, proxy or inference. The creator's own reading lives here, legibly as interpretation.⟩
 
-## Conclusion
+## Conclusion and limits
 
-⟨The claim restated in one paragraph, plus what would change the creator's mind about it.⟩
+⟨The thesis restated at the strength the evidence earned. What data was unavailable. What finding
+would overturn it.⟩
 
 ## References
 
-⟨Alphabetical by author or organization, one line per source, full citation per
-`research-report-standard.md` §3. Every source cited above appears here; nothing appears here that
-wasn't cited above.⟩
+- ⟨Author or Organization. (Year, Month Day). Title. *Publication*. URL⟩
 
-- ⟨Author or Organization. (Year, Month Day). Title. Publication/Platform. URL⟩
+## Appendix: data notes
+
+*(Only when any figure was derived.)*
+
+⟨Arithmetic behind every computed figure; inflation index and base year; why each proxy was chosen.⟩
 
 ---
 
 ## Self-check — run before converting, then delete this section
 
-- [ ] Every claim traces to a citation, or is marked `⚠️ unverified` visibly in the text
-- [ ] Every reference has a live or archived URL — no citation invented to fill a gap
-- [ ] Documented fact / widely believed / speculation are distinguishable in the prose itself
-- [ ] Discussion section is legibly the creator's own read, separated from the sourced sections
-- [ ] Conclusion names what would change the argument's mind
-- [ ] Word count (Summary through Conclusion) sits in the 1,200–2,500 band, or the deviation is
-      explained in the return summary
-- [ ] Section count matches the number of angles the creator's brief actually named
-- [ ] Written entirely in OUTPUT LANGUAGE; source titles stay in their original language
+- [ ] Thesis is one falsifiable sentence; each evidence section maps to one supporting claim
+- [ ] Every figure has value, unit, currency, period, status and scope
+- [ ] Every set of 3+ comparable figures is a table
+- [ ] Cross-year money comparisons inflation-adjusted, index and base year named
+- [ ] Derived figures show arithmetic in the appendix; proxies named as proxies
+- [ ] No causal claim without a source saying so or an explicit inference label
+- [ ] Counterarguments are real, cited, at full strength, answered or conceded
+- [ ] Citation audit done on every source — each page says exactly what it is cited for
+- [ ] No invented citation; gaps marked `⚠️ unverified` or cut
+- [ ] Every "What this establishes" line is honest about what it does not establish
+- [ ] Body (Thesis through Conclusion) is 2,000–4,500 words, or the deviation is explained
+- [ ] Written in OUTPUT LANGUAGE; source titles in their original language
 - [ ] Nothing contradicts `research-dossier.md` for this video

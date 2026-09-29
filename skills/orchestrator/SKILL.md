@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: Complete YouTube channel operating system — routes work across 14 specialized subagents covering strategy, channel audits, competitor intelligence, research, idea generation, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work — growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
+description: Complete YouTube channel operating system — routes work across 15 specialized subagents covering strategy, channel audits, competitor intelligence, research, publishable research reports, idea generation, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work — growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
 ---
 
 # YouTube Agent Matrix — Orchestrator
@@ -180,7 +180,7 @@ authoritative where they conflict.
 | `/yt audit` | `channel-auditor` (4 analysis lenses, parallel where supported) |
 | `/yt competitor [channel]` | `competitor-analyst` (4 analysis lenses, parallel where supported) |
 | `/yt research <topic>` | `research-agent` |
-| `/yt research-report <video>` | `research-report-agent` — needs `research-dossier.md` and the creator's brief |
+| `/yt research-report <video>` | `research-report-agent` — needs `research-dossier.md` and a thesis: from the creator's brief, or confirm the one the approved script argues |
 | `/yt ideate [topic]` | `research-agent` → `ideation-agent` |
 | `/yt calendar` | `calendar-agent` |
 | `/yt hook <topic>` | `script-agent` in `hooks-only` mode |
@@ -462,7 +462,7 @@ Every subagent prompt must carry:
 4. Absolute path to the output folder and the exact filename to write
 5. Paths to prior-stage files it must read
 6. The creator's own words, verbatim, wherever they expressed a preference or correction
-7. Which reference files to load — **named specifically**, so the agent doesn't load all 13
+7. Which reference files to load — **named specifically**, so the agent doesn't load all 14
 8. The path to `_handoff.md`, with the instruction to read it **before writing anything**
 9. The exact file(s) it owns and may write — and that it must write nothing else
 10. The instruction to append one line to `_log.md` when it finishes
@@ -532,6 +532,7 @@ Load on demand. Never pre-load all of them. Never reload one already in context.
 | `markets/_index.md` | Blending a multi-market mix, or a market with no file |
 | `localization-guide.md` | Non-English language work, and markets with no dedicated file |
 | `data-sources.md` | Setting up or debugging an integration |
+| `research-report-standard.md` | Publishable research reports only — `research-report-agent` |
 
 **Market files are not optional for non-US channels.** Every RPM, CPM and sponsorship
 figure in `benchmarks.md` is US-baseline. Applying them unadjusted to a Brazilian, Indian or

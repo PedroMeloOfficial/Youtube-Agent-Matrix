@@ -1,7 +1,7 @@
 # YouTube Agent Matrix
 
 A complete YouTube pre-production system for [Claude Code](https://claude.com/claude-code): an
-orchestrator that routes work to **14 specialized subagents** covering strategy, audits,
+orchestrator that routes work to **15 specialized subagents** covering strategy, audits,
 competitor intelligence, research, ideation, calendars, hooks, scripts, thumbnails, SEO, upload
 metadata, Shorts, repurposing, monetization and analytics. It works for any channel, any niche
 and any language, with three human approval gates and no required API keys.
@@ -237,7 +237,7 @@ YoutubeAgents_Pipeline/
 │   └── orchestrator/
 │       └── SKILL.md             # startup sequence, routing, gates, state model
 ├── agents/                      # the 15 subagent definitions, one file each
-├── references/                  # 13 knowledge files + market files, loaded on demand
+├── references/                  # 14 knowledge files + market files, loaded on demand
 │   ├── benchmarks.md            # SINGLE SOURCE OF TRUTH for every number
 │   ├── algorithm-guide.md       ├── analytics-guide.md
 │   ├── retention-scripting-guide.md
@@ -246,6 +246,7 @@ YoutubeAgents_Pipeline/
 │   ├── monetization-guide.md    ├── repurposing-guide.md
 │   ├── community-guide.md       ├── localization-guide.md
 │   ├── data-sources.md          # integrations and their fallbacks
+│   ├── research-report-standard.md  # thesis, data and citation rules for published reports
 │   └── markets/                 # what a view is WORTH, by market
 │       ├── _index.md            # schema + how to blend a multi-market audience
 │       ├── br.md                ├── us.md

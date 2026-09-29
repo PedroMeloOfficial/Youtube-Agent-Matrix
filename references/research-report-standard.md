@@ -2,141 +2,190 @@
 
 **Purpose.** Defines what `research-report-agent` may publish under the creator's name. This is
 the one deliverable in the matrix meant to leave the pipeline entirely — a stranger with no
-context reads it, judges the creator's rigor by it, and may cite it themselves. That is a
-different bar than every other file here, including `research-dossier.md`, which only ever has to
-survive contact with another agent.
+context reads it, judges the creator's rigor by it, and may cite it themselves. The bar is
+therefore higher than `research-dossier.md`, which only has to survive contact with another agent.
 
-**Contents:** 1 What this is, and is not · 2 Structure · 3 Citation format · 4 Source tiers and
-what may be cited · 5 Length and depth · 6 Voice · 7 Before publishing
+**What it is for:** defending **one thesis** with facts and data, in a way a sceptical reader can
+check line by line. Not a topic overview. A report that informs but never argues has failed its
+brief; a report that argues past its evidence has failed worse.
+
+**Contents:** 1 What this is, and is not · 2 Thesis and claim map · 3 Structure · 4 Data
+discipline · 5 Evidence strength · 6 Citation format · 7 Source tiers · 8 Citation audit · 9 Length
+· 10 Voice · 11 Before publishing
 
 ---
 
 ## 1. What this is, and is not
 
-It is **not** a scientific paper: no abstract written for peer reviewers, no literature-review
-throat-clearing, no methodology section justifying a sample size. Nobody is defending a thesis to
-a committee.
+It is **not** a scientific paper: no literature-review throat-clearing, no methodology section
+justifying a sample size, no committee to satisfy.
 
-It **is** a structured, sourced, citable document — the kind a serious blog or a trade
-publication runs, built to the same evidentiary standard as `research-dossier.md` (§ *Standards*
-in `agents/research-agent.md`) but written for a reader who was never going to open that dossier.
-Every number has a date. Every claim that isn't common knowledge has a citation. A reader can
-follow any citation back to a real, checkable source.
+It **is** an argued, sourced, citable document — the register of a serious trade-press long read
+or a think-tank brief. Every number has a date and a unit. Every claim that isn't common knowledge
+has a citation a reader can follow to a real page that says it.
 
-**Its job is to survive being wrong in public.** The dossier's errors get caught by the script
-agent or the creator before anyone outside the channel sees them. This document's errors are the
-creator's error, permanently, in a document that outlives the video.
+**Its job is to survive being checked in public.** The dossier's errors get caught before anyone
+outside the channel sees them. This document's errors are the creator's, permanently, in a file
+that outlives the video.
 
-## 2. Structure
+## 2. Thesis and claim map — before any research
 
-Fixed skeleton, in this order. `templates/outputs/research-report.md` carries the exact
-placeholders.
+Write these down first; they drive every section after.
 
-1. **Title and byline** — working title of the report (not necessarily the video's title),
-   creator's name or channel name, date, output language.
-2. **Summary** (120–180 words) — what the report argues and why it matters, written so it stands
-   alone if someone reads nothing else. Not an academic abstract: no "this paper examines,"
-   just the claim and its stakes.
-3. **Body sections**, one `##` per angle the creator asked for. Each section is itself sourced and
-   dated; each closes with the one sentence connecting it back to the report's central argument,
-   so a reader skimming headers still gets the throughline.
-4. **Discussion** — where the sections meet. This is where the report is allowed a point of view:
-   the creator's own argument, built from the sourced material above it, stated plainly. Opinion
-   is allowed here and only here, and it must be legible as the creator's read of the evidence,
-   not presented as another sourced fact.
-5. **Conclusion** — the claim restated in one paragraph, plus what would change the creator's mind
-   about it. A report that cannot say what would falsify its own argument is not a research report.
-6. **References** — every source cited above, alphabetical by author or organization, full
-   citation per § 3. Nothing appears here that wasn't cited in the body; nothing is cited in the
-   body that isn't here.
+1. **The thesis** — one declarative sentence that could be wrong. "The product ignores the model its
+   competitors proved works" is a thesis. "An analysis of the industry" is a topic.
+2. **The supporting claims** — the 3–5 things that must each be true for the thesis to hold. Each
+   becomes one evidence section. Each must be checkable on its own.
+3. **For each claim, the evidence that would prove it** — which figures, which documents, which
+   statements — and the evidence that would sink it.
 
-No table of contents field — the document is short enough that headings alone navigate it, and a
-manually-numbered ToC drifts the moment a section is edited.
+**The thesis is allowed to lose.** If the research contradicts a supporting claim, you do not
+bend, trim or bury the evidence. You stop and report it, with the narrower thesis the evidence
+*does* support. Cherry-picking is the failure mode this whole standard exists to prevent.
 
-## 3. Citation format
+## 3. Structure
 
-**APA-style, author–date, adapted for the mix of source types this actually involves.** Real APA
-(7th edition) assumes journal articles and books; most of what feeds this report is web content,
-so use the APA web/organization conventions throughout rather than forcing a journal template
-onto a blog post.
+Fixed skeleton, in this order. `templates/outputs/research-report.md` carries the placeholders.
 
-**In-text:** `(Author or Organization, Year)`. Two authors: `(Smith & Lee, 2023)`. No named author:
-use the organization or publication (`(Deadline, 2022)`), never "Anonymous." No year found: `(n.d.)`
-— and treat that as a flag to look harder before accepting the source at all.
+1. **Title and byline** — report title, creator or channel name, date, the video it accompanies.
+2. **Thesis** — the one sentence, stated in bold, before anything else.
+3. **Summary** (150–250 words) — the thesis, the strongest two or three pieces of evidence with
+   their numbers, and the main limitation. Standalone: a reader who stops here has the argument.
+4. **Background** — only what a stranger needs to follow the argument. When history matters to the
+   thesis, a **chronology table** (date · event · why it matters · source).
+5. **Evidence sections** — one per supporting claim. Each **opens with the claim it establishes**,
+   presents the evidence (a data table whenever three or more comparable figures appear), and
+   **closes with one line: what this establishes for the thesis — and what it does not.**
+6. **Case study** — when the brief names one. Fixed shape: context · the decision taken · the
+   measurable outcome, with numbers · what it demonstrates · what it cannot demonstrate.
+7. **Counterarguments** — the two or three strongest objections a well-informed critic would raise,
+   **found in real discourse and cited**, each stated at full strength, then answered with evidence
+   or explicitly conceded. No strawmen. A report with no objections section is advocacy.
+8. **Discussion** — the inference chain: how the sections add up to the thesis, with every step
+   labelled as direct evidence, proxy or inference (§5). This is where the creator's own reading
+   lives, legibly as interpretation.
+9. **Conclusion and limits** — the thesis restated at the strength the evidence earned; what data
+   was unavailable; what finding would overturn it.
+10. **References** — every cited source, per §6. Nothing listed that isn't cited; nothing cited
+    that isn't listed.
+11. **Appendix: data notes** *(when any figure was derived)* — the arithmetic behind every computed
+    number, inflation adjustments, and how proxies were chosen.
 
-**Reference-list entry, by type:**
+No table of contents field — headings navigate a document this length, and a manual ToC drifts.
 
-- **Web article / news:** `Author or Organization. (Year, Month Day). Title of the article.
-  Publication Name. URL`
-- **Company or platform report:** `Organization. (Year). Title of the report. URL`
-- **Video (interview, documentary, official statement):** `Creator or Channel. (Year, Month Day).
-  Title of the video [Video]. Platform. URL`
-- **Court record, filing, official document:** `Issuing body. (Year). Title or docket identifier.
+## 4. Data discipline
+
+Facts argue; numbers prove. Every figure carries all of:
+
+- **Value, unit, currency** — "US$ 3.2 million per episode", never "3.2M".
+- **Period** — the year, quarter or date range it describes, which is not the publication date.
+- **Status** — *reported* (company filing, official statement), *measured* (a ratings or panel
+  provider), or *estimated* (analyst, trade press) — and by whom.
+- **Scope** — company-level, segment-level or title-level. Companies rarely disclose per-product or
+  per-title figures; never present a segment figure as if it were a single title's.
+
+Rules that follow from that:
+
+- **Money across years** is stated nominally, and — when compared across more than a few years —
+  also inflation-adjusted, with the index and base year named (e.g. US CPI, 2025 dollars).
+- **Derived figures show their arithmetic**, in the text or the data-notes appendix. A number the
+  reader cannot reproduce is an assertion.
+- **Proxies are named as proxies** — demand scores, viewing-hour rankings, search interest — with
+  one line on why the proxy is a fair stand-in and where it breaks.
+- **Comparisons compare like with like**: same period length, same currency, same scope. If they
+  can't, say so beside the comparison.
+- **"Not publicly disclosed" is a finding**, not a gap to fill. Write it; never estimate your way
+  around it without labelling the estimate as yours and showing how.
+- Platform mechanics (CTR, retention, RPM) still come only from `references/benchmarks.md`. Topic
+  facts — market sizes, budgets, revenues — are sourced here like any other research.
+
+## 5. Evidence strength
+
+Every step of the argument is one of three kinds, and the prose makes it visible which:
+
+- **Direct evidence** — the source states it. ("The company's CFO told investors that…")
+- **Proxy** — a measurable stand-in for what can't be observed directly, named as such.
+- **Inference** — your reasoning from the evidence. Allowed, and often the point — but written as
+  inference ("this suggests", "the pattern is consistent with"), never as established fact.
+
+**Causal claims need direct evidence or an explicit inference label.** "Product X drove sales of
+product Y" requires a source saying so, or data showing the link *and* the words
+"consistent with" rather than "caused". Correlation presented as causation is the most common way
+a well-sourced report still ends up wrong.
+
+## 6. Citation format
+
+**APA 7, author–date, using its web and organization conventions** — most of what feeds this report
+is web content, so do not force a journal template onto a news article.
+
+**In-text:** `(Author or Organization, Year)`; two authors `(Smith & Lee, 2023)`; no named author →
+the organization or publication (`(Reuters, 2022)`), never "Anonymous". A direct quote adds the
+location: `(Reuters, 2023, para. 4)`. No year found: `(n.d.)` — and a reason to look harder.
+
+**Reference-list entry, by type** (titles of standalone works in `*italics*`):
+
+- **News / web article:** `Author. (Year, Month Day). Title. *Publication*. URL`
+- **Company report, filing, earnings call:** `Organization. (Year). *Title or document type*. URL`
+- **Data from a page that changes:** add `Retrieved Month Day, Year, from URL`
+- **Video (interview, official statement):** `Channel. (Year, Month Day). *Title* [Video]. Platform.
   URL`
-- **Book:** `Author, A. A. (Year). Title of the book. Publisher.`
-- **Academic article, when one genuinely applies:** `Author, A. A. (Year). Title of the article.
-  Journal Name, Volume(Issue), pages. DOI or URL`
+- **Book:** `Author, A. A. (Year). *Title*. Publisher.`
+- **Journal article:** `Author, A. A. (Year). Title. *Journal*, Volume(Issue), pages. DOI or URL`
 
-List entries alphabetically by the first element (author or organization), not by citation order.
-Every entry needs a live or archived URL — a citation with no way to verify it is not a citation,
-it is an assertion wearing a citation's clothes.
+Alphabetical by first element. Every entry needs a live or archived URL.
 
-## 4. Source tiers and what may be cited
+## 7. Source tiers — what may be cited, and how
 
-Reuses `research-agent`'s three tiers, applied at publication strictness rather than dossier
-strictness:
+- **Primary** (filings, earnings calls, official statements, court records, the company's own
+  data) — preferred for every load-bearing number.
+- **Credible secondary** (established trade press, measurement firms, named analysts) — fine,
+  labelled as reported/estimated by them.
+- **Widely believed** — cite the strongest source making the claim; the prose says "reportedly" or
+  "according to", never asserts it as settled.
+- **Speculation and fan theory** — may be *described* as existing discourse, cited to where it
+  lives, never adopted as the report's own claim.
 
-- **Documented fact** — cite it, state it as fact.
-- **Widely believed** — cite the strongest source making the claim, but the prose must say
-  "reportedly" or "according to `<source>`," never assert it as settled.
-- **Fan theory or speculation** — may be *described* as existing discourse ("some fans argue...",
-  cited to where that argument lives) but never presented as this report's own claim.
+**Wikipedia is a map to sources, never a source.** Follow its footnotes and cite what they point
+to. Aggregators recycling each other are one source, not five.
 
-**A source with no fixed publication date is a source you keep looking past**, not one you cite
-with `(n.d.)` as a shrug. Use it only when nothing better exists, and say so.
+**Never invent a citation.** A claim with no real source is marked `⚠️ unverified` in the visible
+text, or cut. A fabricated reference is worse than an admitted gap — it is undetectable until
+someone checks, and then it discredits everything else in the document.
 
-**Wikipedia is a map to sources, never a source.** Follow its citations to the primary material
-and cite that instead. If a fact only exists on Wikipedia with no traceable citation, mark it
-`⚠️ unverified — Wikipedia only, no primary source found` in the body and either cut it or keep
-the marker in the published text; do not launder it into an unmarked claim.
+## 8. Citation audit — before converting
 
-**Never invent a citation to fill a gap.** A claim with no real source gets `⚠️ unverified` in the
-body (visible to the reader, not hidden) or gets cut. A fabricated reference is the single worst
-failure this document can produce — worse than an admitted gap, because it is undetectable until
-someone checks.
+Re-open **every** cited source and confirm that page contains the specific claim, figure and date
+attributed to it — not a related claim, not the same topic. Fix or cut any mismatch. For sources
+behind a paywall you could not read in full, cite only what the visible portion states and say so.
+This step is not optional and not sampled; a single mismatched citation is the one a critic finds.
 
-## 5. Length and depth
+## 9. Length
 
-Target **1,200–2,500 words of body text** (summary through conclusion; references don't count).
-That is genuinely multi-page once formatted — four to eight pages depending on section count —
-without becoming the "elaborate scientific paper" the creator explicitly does not want. Depth
-comes from source density and the sharpness of the discussion section, not from word count; a
-2,000-word report with twenty checkable sources beats a 5,000-word one with three.
+**2,000–4,500 words of body text** (Thesis through Conclusion; references and appendix excluded) —
+roughly six to twelve pages once formatted. Budget about 400–900 words per evidence section and the
+case study, 300–600 for counterarguments. Length follows the claim map, never the other way round:
+three supporting claims make three evidence sections, not five padded ones.
 
-Section count follows the number of angles the creator actually asked for — three angles in the
-brief means three body sections, not a padded five.
+## 10. Voice
 
-## 6. Voice
+Third person, plain, for a reader who has never seen the video. It may name the video once, near
+the top, as where the argument is presented on camera, and nowhere else. Confident where the
+evidence is strong, explicit where it is thin — hedging everything reads as weaker than stating
+limits once, clearly.
 
-Written in the third person, plainly, for a reader who has never seen the video. Do not write
-"in this video I argue" — the report stands on its own and may be read by someone who never
-clicks through. It may reference the video once, near the top, as where the argument is presented
-in full ("this report supports the analysis in `<video title>`"), and nowhere else.
+Written in `output_language`; citations and source titles stay in their original language.
 
-Match `output_language`. Citations and source titles stay in their original language, same rule as
-`research-dossier.md`.
+## 11. Before publishing
 
-## 7. Before publishing
-
-- [ ] Every claim traces to a citation, or is marked `⚠️ unverified` visibly in the text
-- [ ] Every reference-list entry has a live or archived URL
-- [ ] No citation invented to cover a gap
-- [ ] Documented fact / widely believed / speculation are distinguishable in the prose, not just
-      internally
-- [ ] Discussion section states the creator's own read, legibly separated from the sourced facts
-      above it
-- [ ] Conclusion names what would change the argument's mind
-- [ ] Word count sits in the 1,200–2,500 band, or the deviation is explained in the return summary
-- [ ] Nothing contradicts `research-dossier.md` for the same video; a real contradiction is
-      reported, not silently resolved
-- [ ] Written entirely in `output_language`
+- [ ] Thesis is one falsifiable sentence; every evidence section maps to a supporting claim
+- [ ] Every figure has value, unit, currency, period, status and scope
+- [ ] Cross-year money comparisons inflation-adjusted, index and base year named
+- [ ] Derived figures show their arithmetic; proxies named as proxies
+- [ ] Direct evidence, proxy and inference are visibly distinct; no causal claim without either a
+      source or an inference label
+- [ ] Counterarguments are real, cited, at full strength, and answered or conceded
+- [ ] Citation audit done on every source — each page says what it is cited for
+- [ ] No invented citation; gaps marked `⚠️ unverified` or cut
+- [ ] Conclusion states limits and what would overturn the thesis
+- [ ] Nothing contradicts `research-dossier.md`; a real contradiction is reported
+- [ ] Body length in the 2,000–4,500 band, or the deviation explained
