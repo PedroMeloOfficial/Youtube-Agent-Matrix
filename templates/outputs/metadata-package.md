@@ -95,6 +95,10 @@ End screen occupies the last 15–20 seconds. Confirm the script leaves room for
 - [ ] End screen and cards placed
 - [ ] Scheduled for `{DATE}` `{TIME}` `{TIMEZONE}`, pinned comment ready to post
 - [ ] Shorts cutdowns queued: `{N}`
+- [ ] If `research-report.docx` exists for this video: published its link somewhere shareable
+      (Drive, Docs, the creator's own site) and added that real link to the description — never a
+      placeholder. If it hasn't been published yet, this stays unchecked and is the last thing
+      standing between this package and publish.
 
 ## Self-check
 

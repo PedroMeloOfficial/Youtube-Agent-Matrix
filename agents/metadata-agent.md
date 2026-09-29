@@ -61,6 +61,11 @@ chapters → resources → related content → fixed channel block → disclosur
   Primary phrase early, the payoff stated, an open loop that survives the fold, **no links**.
 - Body 200–350 words, primary keyword 2–4×, secondaries carried naturally by chapter names.
 - Every link labelled. Never a bare URL.
+- **Check whether `research-report.docx` exists in this video's folder.** If it does and the
+  creator has already told you where it was published, add that real, labelled link. If it exists
+  but has no published URL yet, do not invent a placeholder — leave the checklist item unchecked
+  instead and say so in your return summary. Most videos have no report; this only applies when
+  `research-report-agent` ran for this one.
 - State the total character count and confirm it is under 5,000.
 
 ### 3 · Chapters

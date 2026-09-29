@@ -260,8 +260,13 @@ Two deliverables ship in two versions, and the distinction is load-bearing:
 
 | Source of truth (agents read this) | Derived view (the creator reads this) | Owner |
 |---|---|---|
-| `script-{a\|b\|c}-*.md` | `script-recording.docx` | `script-agent`, `recording` mode |
+| `script-{a\|b\|c}-*.md` | `script-recording.docx` — screenplay format: scene/cut headings, speaker cues, spoken lines | `script-agent`, `recording` mode |
 | `workspace/channel-profile.md` | `workspace/channel-summary.docx` | `channel-strategist` |
+
+`research-report-agent`'s `research-report.docx` uses the same converter (`execution/build_reader_doc.py`)
+but is **not a pair**: nothing downstream reads `research-report.md` as a source of truth, so
+rules 1–3 below don't apply to it the way they apply to the two pairs above. Rules 4–6 (Word
+output, graceful degradation, never clobbering a hand-edit) still do.
 
 Rules when touching either pair:
 

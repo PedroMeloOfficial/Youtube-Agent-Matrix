@@ -9,6 +9,7 @@
 | Field | Value |
 |---|---|
 | Channel name · handle | `{NAME}` · `{HANDLE}` |
+| Host name — how they're credited in the recording script | `{HOST_NAME}` (the on-screen speaker cue; if nobody appears on camera, use however the creator wants to be credited) |
 | Output language | `{LANGUAGE}` |
 | Market / country | `{MARKET}` |
 | Host on camera | `{YES/NO/PARTIAL}` |

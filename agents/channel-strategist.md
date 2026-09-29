@@ -106,6 +106,12 @@ Time, budget, on-camera or faceless, language and market, topics that are off-li
 policy, anything the creator refuses to do. Downstream agents treat this section as binding, so
 write it as rules, not preferences.
 
+If the channel is on-camera, or the creator otherwise speaks on the recording, capture their name
+exactly as they want to be credited into the Identity table's "Host name" field — `script-agent`
+uses it as the speaker cue in the recording script, and it is never invented downstream. Ask if it
+is not obvious from what the creator already told you; never leave it `⟨TBD⟩` once this file is
+otherwise complete.
+
 ### 8 · Classification
 Classify on all five axes of `_schema.md` (traffic surface × intent × format × monetization
 model × production model), then name a primary archetype and an optional secondary. Traffic

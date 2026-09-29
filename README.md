@@ -125,6 +125,7 @@ Explicit commands, when you already know what you want:
 | `/yt audit` | `channel-auditor` (4 analysis lenses, parallel where supported) |
 | `/yt competitor [channel]` | `competitor-analyst` (4 analysis lenses, parallel where supported) |
 | `/yt research <topic>` | `research-agent` |
+| `/yt research-report <video>` | `research-report-agent` — publishable, APA-cited report, on demand |
 | `/yt ideate [topic]` | `research-agent` → `ideation-agent` |
 | `/yt calendar` | `calendar-agent` |
 | `/yt hook <topic>` | `script-agent` in `hooks-only` mode |
@@ -199,7 +200,7 @@ verbatim — never the whole chain.
 
 ---
 
-## The 14 agents
+## The 15 agents
 
 | Agent | Owns |
 |---|---|
@@ -207,6 +208,7 @@ verbatim — never the whole chain.
 | `channel-auditor` | Scored channel health across SEO, performance, content and monetization, with the single highest-leverage fix named |
 | `competitor-analyst` | The competitive landscape: keyword gaps, format gaps, audience gaps, and which of their videos are outliers |
 | `research-agent` | Verified substance for one video — facts with sources, angle gaps, current discourse, sourceable visuals |
+| `research-report-agent` | The publishable, APA-cited research report behind a video, on demand — not part of the standard chain |
 | `ideation-agent` | Ranked, pitchable video ideas as idea cards, scored against the channel's own pillars |
 | `calendar-agent` | The publishing calendar: cadence, production windows, pillar balance, seasonality |
 | `script-agent` | Hook options across multiple frameworks, three full retention-engineered script variants, and the clean recording script for the one you approve |
@@ -234,7 +236,7 @@ YoutubeAgents_Pipeline/
 ├── skills/
 │   └── orchestrator/
 │       └── SKILL.md             # startup sequence, routing, gates, state model
-├── agents/                      # the 14 subagent definitions, one file each
+├── agents/                      # the 15 subagent definitions, one file each
 ├── references/                  # 13 knowledge files + market files, loaded on demand
 │   ├── benchmarks.md            # SINGLE SOURCE OF TRUTH for every number
 │   ├── algorithm-guide.md       ├── analytics-guide.md
@@ -271,7 +273,8 @@ YoutubeAgents_Pipeline/
             ├── research-dossier.md      ├── idea-cards.md
             ├── hooks.md                 ├── script-a-narrative.md
             ├── script-b-instructional.md├── script-c-argumentative.md
-            ├── script-recording.docx    # the clean version you read on camera
+            ├── script-recording.docx    # the clean, screenplay-format version you read on camera
+            ├── research-report.docx     # optional — publishable research report, on demand
             ├── seo-package.md           ├── thumbnail-brief.md
             ├── metadata-package.md      ├── shorts-plan.md
             └── production-package.md    # the final deliverable
@@ -306,12 +309,15 @@ two versions:
 
 | What the agents read | What you read |
 |---|---|
-| `script-a/b/c-*.md` — timestamps, `[B-ROLL:]`, `[INTERRUPT]`, beat claims, evidence traces | `script-recording.docx` — what the scene is, then exactly what to say. Stage direction in small grey italic so it can never be misread as a line to speak. |
+| `script-a/b/c-*.md` — timestamps, `[B-ROLL:]`, `[INTERRUPT]`, beat claims, evidence traces | `script-recording.docx` — screenplay format: a scene/cut heading, a speaker cue, then exactly what to say. Stage direction in small grey italic so it can never be misread as a line to speak. |
 | `channel-profile.md` — the full specification, every field, every test | `channel-summary.docx` — one page of plain prose, under 500 words, ready to highlight and annotate |
 
 The agent-facing file is always the source of truth. The readable one restates it and never
 decides anything on its own, both are written by the same agent in the same run, and the recording
 script is generated only for the variant you actually approve at Gate 2 — not for all three.
+
+`research-report-agent`'s report (below) uses the same Word-document converter but isn't one of
+these pairs — nothing else reads it, so there's no denser agent-facing version to keep in sync.
 
 **They come out as Word files**, because Markdown is the wrong container for something you read
 with a camera running. This needs `python-docx` (`pip install python-docx`) or `pandoc` on your

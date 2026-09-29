@@ -98,40 +98,26 @@ at any time by saying so — update the file and confirm in one line.
 
 ### Step 2 — The language rule
 
-`output_language` governs **every deliverable**: ideas, scripts, hooks, titles, descriptions,
-tags, calendars, audits, reports, and your own conversation with the creator.
+`output_language` governs every deliverable and your conversation with the creator. **Exception:
+`thumbnail-agent` writes entirely in English** (image models perform far worse otherwise), except
+`overlay_text` and `paired_title`, which stay in the creator's language because viewers read them.
 
-**The one exception — thumbnails.** The `thumbnail-agent` writes its entire deliverable in
-**English**, always, regardless of `output_language`. Image-generation models are trained
-predominantly on English and produce materially worse results otherwise. Two sub-fields inside
-that English document stay in the creator's language, because viewers read them:
-
-- `overlay_text` — the words rendered on the thumbnail image
-- `paired_title` — the video title it is designed against
-
-Every subagent prompt you write must state the output language explicitly. Do not assume a
-subagent knows it.
+State the output language explicitly in every subagent prompt — never assume it is known.
 
 ### Step 2b — The market rule
 
-`markets.mix` governs **every economic figure**: RPM, CPM, sponsorship rates, revenue
-projections, seasonality, and which disclosure regime applies.
+`markets.mix` governs every economic figure: RPM, CPM, sponsorship, revenue projections,
+seasonality, disclosure regime. For each market in the mix, load `references/markets/<code>.md`
+if it exists (`br.md`, `us.md`); with no file, fall back to `localization-guide.md`'s multiplier
+table and say so in the deliverable — never present it as market data.
 
-For each market in the mix, load `references/markets/<code>.md` if it exists — currently `br.md`
-and `us.md`. For a market with no file, fall back to the multiplier table in
-`references/localization-guide.md` and **say in the deliverable that a directional multiplier was
-used rather than market data**.
+`references/benchmarks.md` is US-baseline; applying it unadjusted to a non-US channel is a
+correctness bug. Blend a mix as a weighted average, arithmetic shown, method in
+`references/markets/_index.md`.
 
-Everything in `references/benchmarks.md` is **US baseline**. Passing an unadjusted `benchmarks.md`
-revenue figure to a non-US channel is a correctness bug, not a rounding error.
-
-Blended figures are computed as a weighted average across the mix, with the arithmetic shown and
-the mix named. Full method in `references/markets/_index.md`.
-
-**`source: "analytics"` always beats `source: "declared"`.** The first time `analytics-agent` sees
-real Geography data it returns the measured mix; you overwrite `markets.mix` and flip `source`.
-Tell the creator in one line what changed and what it means for any revenue figure they were
-given before.
+**`source: "analytics"` always beats `"declared"`.** The first real Geography data from
+`analytics-agent` overwrites `markets.mix`; tell the creator what changed and what it means for
+any revenue figure they were already given.
 
 ### Step 3 — Load the channel profile
 
@@ -169,6 +155,7 @@ authoritative where they conflict.
 | `channel-auditor` | Health score across SEO, performance, content, monetization | benchmarks, data-sources + lens refs: seo, thumbnail-ctr, analytics, algorithm, repurposing, monetization, localization, markets |
 | `competitor-analyst` | Competitive landscape, keyword and format gaps, outliers | benchmarks, seo, algorithm, data-sources, markets |
 | `research-agent` | Verified substance for one video: facts, angle gaps, discourse, sourceable visuals | benchmarks |
+| `research-report-agent` | Publishable, APA-cited research report for one video — on-demand, not part of the chain | benchmarks, research-report-standard |
 | `ideation-agent` | Ranked, pitchable video ideas as idea cards | benchmarks, algorithm, seo, hook-library |
 | `calendar-agent` | Publishing calendar, production windows, pillar balance, seasonality | benchmarks, repurposing, markets |
 | `script-agent` | Hook options, 3 full retention-engineered script variants, **and** the clean recording document for the approved one | benchmarks, hook-library, retention, localization (non-English) |
@@ -193,6 +180,7 @@ authoritative where they conflict.
 | `/yt audit` | `channel-auditor` (4 analysis lenses, parallel where supported) |
 | `/yt competitor [channel]` | `competitor-analyst` (4 analysis lenses, parallel where supported) |
 | `/yt research <topic>` | `research-agent` |
+| `/yt research-report <video>` | `research-report-agent` — needs `research-dossier.md` and the creator's brief |
 | `/yt ideate [topic]` | `research-agent` → `ideation-agent` |
 | `/yt calendar` | `calendar-agent` |
 | `/yt hook <topic>` | `script-agent` in `hooks-only` mode |
@@ -217,6 +205,7 @@ not interrogate the creator about it.
 | "my channel isn't growing", "what's wrong with my channel" | `channel-auditor` |
 | "who am I competing with", "what is [channel] doing" | `competitor-analyst` |
 | "what should I make next", "give me ideas" | `research` → `ideation` |
+| "I want to publish my research", "a document people can read about this" | `research-report-agent` |
 | "I want to make a video about X" | **full chain** |
 | "write me a hook", "fix my intro", "first 30 seconds" | `script-agent` (`hooks-only`) |
 | "write the script" | `script-agent` (`full`) |
@@ -298,6 +287,7 @@ Channel-level artifacts live directly in `workspace/`, never inside a video fold
 ├── script-b-instructional.md
 ├── script-c-argumentative.md
 ├── script-recording.docx        ← written after GATE 2, for the approved variant only
+├── research-report.docx         ← optional, on demand, not part of the chain
 ├── seo-package.md
 ├── thumbnail-brief.md
 ├── metadata-package.md
@@ -308,25 +298,23 @@ Channel-level artifacts live directly in `workspace/`, never inside a video fold
 
 ### Two audiences, two files
 
-Most files here are written for **agents** — dense and structured, because a parser needs them
-that way. Two are also files a **human** has to use, one while a camera is running and one while
-deciding whether an idea fits the channel. For those, density is a defect.
+Two files are also read by a **human**, not just an agent — density is a defect there, so each
+ships a derived Word-document view built by `execution/build_reader_doc.py` alongside its
+agent-facing source.
 
 | Agent-facing (source of truth) | Creator-facing (derived view) | Written by |
 |---|---|---|
-| `script-{a\|b\|c}-*.md` | `script-recording.docx` | `script-agent` |
+| `script-{a\|b\|c}-*.md` | `script-recording.docx` — screenplay format: scene/cut headings, speaker cues, spoken lines | `script-agent` |
 | `workspace/channel-profile.md` | `workspace/channel-summary.docx` | `channel-strategist` |
 
-The derived file **restates, never decides**; agents always read the source. Both are written by
-the same agent in the same run — a drifted derived view is worse than none, since it is the one
-the creator reads. If the derived file needs something the source lacks, fix the source first.
-Do not create derived views for anything else unless asked.
+The derived file **restates, never decides**; both are written by the same agent, same run — a
+drifted derived view is worse than none. Built from a short-lived Markdown file the agent deletes
+after conversion; without `python-docx`/`pandoc` the Markdown stays as the deliverable and the
+agent passes on the install command. It never overwrites a hand-edited `.docx` — a hash mismatch
+writes `-v2` instead. Do not create a fourth pair unless asked.
 
-Both derived views are **Word documents**, built by `execution/build_reader_doc.py` from a
-short-lived Markdown file the agent writes and the script deletes. Markdown is the wrong container
-for something read with a camera running or annotated by hand. If neither `python-docx` nor
-`pandoc` is installed the conversion fails, the Markdown stays as the deliverable, and the agent
-passes on the install command — the format degrades, the pipeline does not.
+`research-report-agent`'s report uses the same converter but is **not** a pair — nothing reads its
+Markdown as a source, so there is no agent-facing counterpart to keep in sync.
 
 ### File ownership — one writer per file, always
 
@@ -341,6 +329,7 @@ This is what prevents one agent from silently overwriting another's work.
 | `research-dossier.md` | `research-agent` |
 | `idea-cards.md` | `ideation-agent` |
 | `hooks.md`, `script-*.md`, `script-recording.docx` | `script-agent` |
+| `research-report.md` (intermediate), `research-report.docx` | `research-report-agent` |
 | `seo-package.md` | `seo-agent` |
 | `thumbnail-brief.md` | `thumbnail-agent` |
 | `metadata-package.md` | `metadata-agent` |
