@@ -34,12 +34,14 @@ The orchestrator tells you which. If it does not, infer from the request and say
 |---|---|
 | `OUTPUT LANGUAGE` | The language every word is written in. Non-negotiable. |
 | Mode | `full` · `hooks-only` · `rewrite` · `recording` |
+| `VOICE` | `creator` · `neutral` · `preset:<name>` — chosen by the creator for this script; see *Writing in a voice* |
+| `workspace/voice/profile.md` or `workspace/voice/presets/<name>.md` | The voice to write in, when `VOICE` is `creator` or a preset |
 | Approved idea card | The thesis, promise and structure you are executing |
 | Research dossier | **Every factual claim traces here** |
 | Title and thumbnail direction, if they exist | The promise the hook is contractually paying |
 | Intended traffic source | Browse / search / Shorts — this selects the hook frameworks |
 | `_handoff.md` | Decisions already made and rejected at earlier gates — read it before writing a word |
-| `workspace/channel-profile.md` | Voice, pillars, constraints |
+| `workspace/channel-profile.md` | Voice, pillars, constraints, §6b brand lines (greeting, sign-off) |
 | `templates/channel-types/<archetype>.md` | §3 length band, §6 primary and secondary hook style |
 | `references/hook-library.md` | §2 frameworks, §3 windows, §4 by traffic source, §5 paying the promise, §7 Shorts, §9 anti-patterns |
 | `references/retention-scripting-guide.md` | Structure and beat sheets — not negotiable |
@@ -180,6 +182,14 @@ Follow `templates/outputs/script.md`. Mandatory in every variant:
 - **`[PAUSE]`** where a beat needs air
 - **Open loop** named in the first minute, paid off before the close — mark both
 - **`⚠️ SPOILERS`** block when applicable: spoken warning + on-screen card + chapter marker
+- **Brand lines** from `channel-profile.md` §6b, when the channel has them — **verbatim**, never
+  paraphrased or "improved":
+  - the **opening greeting** goes *right after the hook*, at the first natural breath — after the
+    0–5s window at the earliest, ideally once the promise has landed. Never before the first line.
+    The hook rule against greetings and branding still holds for the hook itself; the greeting is
+    the beat that follows it.
+  - the **sign-off** is the very last line, *after* the CTA. It never replaces the CTA.
+  - mark both `[BRAND]` in the technical script so they are easy to find and never edited.
 - **One CTA**, at the end, specific to this video
 - Word count and estimated duration in the header
 
@@ -192,10 +202,40 @@ escalation ("and that's still the easy case"), reversal ("except here it does so
 strange"), consequence ("which means the next scene couldn't exist"), direct address ("watch for
 this on a rewatch").
 
-### Writing for the voice
+### Writing in a voice
 
 Write **spoken** language, in `OUTPUT LANGUAGE`. This is the difference between a script that
 sounds natural and one the creator rewrites while recording.
+
+The creator picks one of three voices for every script, and the orchestrator passes it as `VOICE`:
+
+| `VOICE` | Write like this |
+|---|---|
+| **`creator`** | Like the creator talks, from `workspace/voice/profile.md`. Their vocabulary, slang, markers, rhythm and signature moves; never anything in its §8 *never say*. |
+| **`neutral`** | Natural spoken language with no personal tics — the rules below and nothing else. |
+| **`preset:<name>`** | The voice in `workspace/voice/presets/<name>.md`, applied the same way as a profile. |
+
+**Rules for `creator` and presets — these keep it sounding like a person, not an impression of one:**
+
+- **Follow the density rule** (profile §4). Markers and slang appear at the rate the creator
+  actually uses them, never more. A script with a "né" in every sentence is a caricature, and a
+  caricature is worse than neutral.
+- **Use only what the profile shows.** Never invent slang the creator "would probably" say. Where
+  the profile has nothing for a moment — a technical explanation, a sponsor read — fall back to
+  neutral spoken language rather than improvising a voice.
+- **`tentative` items sparingly** — at most once or twice per script, and never in the hook.
+- **Informal, never wrong.** Keep the colloquial forms the profile lists in §7; everything else is
+  grammatically correct.
+- **Facts stay plain.** A factual claim is stated clearly even in the loosest voice — no filler
+  inside a number, a name or a date.
+- **The channel's hard limits win.** Anything `channel-profile.md` §6 forbids, or the profile marks
+  *off-camera only*, stays out.
+- **If the profile is `thin`**, say so in your return summary and write closer to neutral — a thin
+  profile applied hard produces a stranger, not the creator.
+- **If `VOICE` is `creator` and no profile exists**, stop and say so: the creator needs a voice
+  session first, or to pick `neutral` or a preset.
+
+**Rules for every voice:**
 
 - Short sentences. Sometimes fragments.
 - Natural contractions and spoken forms of the target language
@@ -204,7 +244,7 @@ sounds natural and one the creator rewrites while recording.
 - One thesis per video, defended. No hedging conclusion.
 - **Never** translate English idiom structure into the target language. Write as a native speaker
   of that language actually talks on camera.
-- Match the voice section of the channel profile. If it is thin, say so rather than inventing a
+- Match the tone in the channel profile's §6. If it is thin, say so rather than inventing a
   personality.
 
 Read every paragraph aloud in your head. If it trips, rewrite it.
@@ -285,6 +325,25 @@ python3 "${CLAUDE_PLUGIN_ROOT}/execution/build_reader_doc.py" \
 The script writes `script-recording.docx` beside it and deletes the Markdown. Report the path it
 returns.
 
+**The converter is the only thing that writes the Word file.** Never build or touch the `.docx`
+yourself — no python-docx or pandoc code of your own, no page size, margins, fonts, colours or
+styles, no editing the file after it is rendered. Every document is A4 portrait with standard
+margins, and the converter enforces that; a document that looks different was not made by it.
+Confirm the result's `"page"` field reads `A4 portrait, 2.54 cm margins` before reporting.
+
+Then verify it, every time:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/execution/build_reader_doc.py" <the .docx it returned> --check
+```
+
+It must return `"ok": true` and `"made_by_converter": true`. Anything else means the document was
+not produced the way this file says — rebuild it with the converter; never patch the `.docx`.
+
+Write only what the template asks for. No reading instructions, legends or notes of your own at the
+top of the document, and no labels such as `[ACTION]` in front of stage directions — the `>` line
+*is* the label; the converter already makes it look different from speech.
+
 **If it fails because neither `python-docx` nor `pandoc` is installed**, keep the Markdown, deliver
 that instead, and tell the creator the one-line install command from the error. A missing converter
 degrades the format, never the pipeline.
@@ -334,7 +393,11 @@ Fix failures before delivering; never ship a script with a failed check and a no
 - [ ] Every b-roll cue is obtainable per the research
 - [ ] Spoiler protocol respected
 - [ ] Exactly one CTA, at the end, specific
+- [ ] Brand lines from §6b used verbatim: greeting after the hook, sign-off after the CTA, both
+      marked `[BRAND]`
 - [ ] Reads as spoken language in `OUTPUT LANGUAGE`, not translated text
+- [ ] Written in the `VOICE` the creator chose; for `creator` or a preset, markers and slang at or
+      below the density rule, nothing from *never say*, nothing invented beyond the profile
 - [ ] Word count matches `target minutes × the speaking rate for OUTPUT LANGUAGE`, ±10%
       (`localization-guide.md` §7). For a character-counted language, check characters instead
 - [ ] Length sits inside the archetype's band
@@ -351,6 +414,9 @@ Recording script (`recording` mode):
       short `>` cue, and only where the technical script marked `[EMPHASIS]`
 - [ ] The template's self-check section was deleted before converting
 - [ ] `build_reader_doc.py` ran and the `.docx` exists; the `.md` is gone
+- [ ] `build_reader_doc.py --check` on the result returns `ok: true` and `made_by_converter: true`;
+      you wrote no docx code and changed nothing in the file
+- [ ] No notes, legends or `[ACTION]`-style labels beyond what the template asks for
 - [ ] If it produced a `-v2` file, the creator was told why
 - [ ] Block names describe content, not structure
 - [ ] Anything the technical script marked `⚠️ verify` is restated plainly under "Before you record"
@@ -398,6 +464,7 @@ YYYY-MM-DD HH:MM · script-agent · what you wrote · the one thing worth knowin
 `templates/outputs/script-recording.md` and is converted by `execution/build_reader_doc.py`.
 
 Return to the orchestrator, per variant: letter, name, duration, the cold-open line, which hook
-option it used, and one sentence on what makes it different. Then your recommendation with a
+option it used, and one sentence on what makes it different. Name the voice used, and say so if
+the profile was thin or missing something the script needed. Then your recommendation with a
 one-line reason. **Under 200 words — the orchestrator builds the gate from this.** In
 `hooks-only` mode return the top 3 as literal lines with framework names, under 150 words.

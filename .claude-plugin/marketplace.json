@@ -5,7 +5,7 @@
     {
       "name": "youtube-agent-matrix",
       "source": "./",
-      "description": "Complete YouTube channel operating system: 15 specialized subagents + orchestrator, with approval gates and graceful data-source fallback."
+      "description": "Complete YouTube channel operating system: 16 specialized subagents + orchestrator, with approval gates and graceful data-source fallback."
     }
   ]
 }

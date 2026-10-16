@@ -11,8 +11,13 @@
 > source of truth. Never write a line here that does not exist there. If a line needs to change,
 > change it in the source variant first, then regenerate.
 >
-> **The one job of the document:** the creator props the phone up, sees who is speaking and what
-> just cut to what, and reads. Nothing on the page may compete with the words they have to say.
+> **Never build the Word file yourself** and never add page size, fonts or styles: the converter
+> renders every document as A4 portrait, and is the only thing allowed to write it. Write nothing
+> the template does not ask for — no reading legend, no `[ACTION]` labels.
+>
+> **The one job of the document:** the creator opens it beside the camera — on a screen or
+> printed — sees who is speaking and what just cut to what, and reads. It is a normal A4 Word
+> document; never shape it for a phone or any other screen. Nothing on the page may compete with the words they have to say.
 
 ## How the converter reads this file
 
@@ -56,6 +61,8 @@ changed on screen.
 - **Stage direction opens every scene**, before the speaker cue. The one thing allowed *between*
   spoken paragraphs is a single short `>` emphasis cue, and only where the technical script marked
   that line `[EMPHASIS]`.
+- **Brand lines stay exactly as written** — the greeting and sign-off the technical script marks
+  `[BRAND]` are spoken lines like any other, copied verbatim, with no `[BRAND]` label left in.
 - Drop everything that is reasoning rather than performance: beat claims, evidence traces,
   transition labels, interrupt counts, word counts, the self-check. All of it stays one file away
   in the technical variant.

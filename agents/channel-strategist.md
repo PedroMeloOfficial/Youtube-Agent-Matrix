@@ -93,7 +93,9 @@ Not adjectives. Specify: sentence rhythm, formality level, how the creator addre
 viewer, humour type and how often, what they never say, and the recurring structural habits a
 regular viewer would recognize. Include two or three verbatim phrases from the creator's own
 words if you have them — the script agent uses this section directly, and adjectives give it
-nothing to work with.
+nothing to work with. This is the channel's **tone and hard limits**; the detailed fingerprint of
+how the creator talks is learned from samples by `voice-agent` (`workspace/voice/profile.md`) —
+do not try to reproduce it here, and never contradict it.
 
 ### 6 · Format ladder and cadence
 Ladder from cheapest to most expensive to produce, with realistic effort per format. Then a
@@ -111,6 +113,28 @@ exactly as they want to be credited into the Identity table's "Host name" field 
 uses it as the speaker cue in the recording script, and it is never invented downstream. Ask if it
 is not obvious from what the creator already told you; never leave it `⟨TBD⟩` once this file is
 otherwise complete.
+
+### 7b · Brand lines — the greeting, the sign-off, the tagline
+
+A fixed opening greeting ("hey, `<audience name>`, `<host>` here"), a fixed sign-off and a written
+tagline are part of a channel's identity: repeated in every video, they become the thing a
+regular viewer says along with the host. Fill §6b of the profile.
+
+**You propose, the creator chooses.** Offer three to five options for each line they want, in your
+return summary, and write only the chosen text into §6b — until they choose, the rows stay
+`⟨NONE⟩`. Good options are:
+
+- **short** — a greeting the creator can say in one breath, under two seconds;
+- **easy to say** — no tongue-twisters, nothing that trips when repeated at speed;
+- **theirs** — built from how the creator already talks: read `workspace/voice/profile.md` §5–§6
+  if it exists, and if they already have a natural greeting, it is the first candidate;
+- **on-positioning** — the tagline says what the channel is for, in the territory's language;
+- **with an audience name** when it fits the voice — a name for the viewers creates belonging;
+- **original** — never another channel's catchphrase, audience name or structure close enough to
+  be recognised as theirs. Check the obvious competitors from your landscape research.
+
+When the creator asks only for brand lines, run just this step and edit only §6b — leave the rest
+of the profile and the summary untouched.
 
 ### 8 · Classification
 Classify on all five axes of `_schema.md` (traffic surface × intent × format × monetization
@@ -153,6 +177,7 @@ positioning is thin, the file says it is thin and names the one decision that wo
 - [ ] Every pillar has an assigned job, a share of output, and three example concepts
 - [ ] No two pillars do the same job
 - [ ] Voice section is specific enough for the script agent to write from
+- [ ] §6b brand lines hold only text the creator chose; options offered were original and short
 - [ ] Cadence matches the creator's stated hours, not their ambition
 - [ ] 5–8 competitors researched, each with a gap note marked real or unserved-for-a-reason
 - [ ] Unverified figures are marked as unverified
@@ -164,7 +189,7 @@ positioning is thin, the file says it is thin and names the one decision that wo
 - [ ] Nothing contradicts a decision recorded in `_handoff.md`
 - [ ] The summary was written in the same run, under 500 words, every claim tracing to the profile
 - [ ] The summary contains no `⟨TBD⟩` and no internal vocabulary
-- [ ] `build_reader_doc.py` ran and `channel-summary.docx` exists; the `.md` is gone
+- [ ] `build_reader_doc.py` ran and `channel-summary.docx` exists; the `.md` is gone; its `page` field reads A4
 - [ ] If it produced a `-v2` file, the creator was told why
 
 ---
@@ -201,6 +226,21 @@ python3 "${CLAUDE_PLUGIN_ROOT}/execution/build_reader_doc.py" workspace/channel-
 ```
 
 That writes `workspace/channel-summary.docx` and deletes the Markdown. Report the path it returns.
+
+**The converter is the only thing that writes the Word file.** Never build or touch the `.docx`
+yourself — no python-docx or pandoc code of your own, no page size, margins, fonts, colours or
+styles, no editing the file after it is rendered. Every document is A4 portrait with standard
+margins, and the converter enforces that; a document that looks different was not made by it.
+Confirm the result's `"page"` field reads `A4 portrait, 2.54 cm margins` before reporting.
+
+Then verify it, every time:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/execution/build_reader_doc.py" <the .docx it returned> --check
+```
+
+It must return `"ok": true` and `"made_by_converter": true`. Anything else means the document was
+not produced the way this file says — rebuild it with the converter; never patch the `.docx`.
 
 **If it fails because neither `python-docx` nor `pandoc` is installed**, keep the Markdown, deliver
 that, and pass on the one-line install command from the error. **If it returns a `-v2` filename**,

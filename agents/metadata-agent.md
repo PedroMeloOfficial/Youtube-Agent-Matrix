@@ -56,6 +56,8 @@ shows. Give two alternates beneath it, with counts, for A/B testing.
 ### 2 · Description — one copy-paste block
 Follow the seven-block architecture in `seo-playbook.md` §6: hook paragraph → expansion →
 chapters → resources → related content → fixed channel block → disclosures and hashtags.
+The fixed channel block opens with the channel's **tagline** from `channel-profile.md` §6b,
+verbatim, when one exists — never a new one written for this video.
 
 - **The first 150 characters must work standalone.** That is all that shows before "Show more".
   Primary phrase early, the payoff stated, an open loop that survives the fold, **no links**.

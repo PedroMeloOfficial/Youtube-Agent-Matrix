@@ -14,7 +14,7 @@ Guidance for anyone (human or agent) editing this plugin. The user-facing docume
                         │  delegates with an explicit prompt
                         ▼
   Layer 2   agents/*.md
-            15 subagents. Each owns its deliverable — two of them also own a
+            16 subagents. Each owns its deliverable — two of them also own a
             derived creator-facing view of it, see below. Agents do not call
             each other; the orchestrator fans them out and collects results.
                         │  loads, on demand, only what it needs
@@ -280,7 +280,10 @@ Rules when touching either pair:
    `execution/build_reader_doc.py` on it, and the script renders the `.docx` and deletes the
    Markdown. The templates' conventions are functional, not stylistic: in the recording script a
    plain paragraph is a line to *say* and a `>` line is a line to *do*, and the converter renders
-   them differently so they cannot be confused on camera.
+   them differently so they cannot be confused on camera. **The converter is the only writer of a
+   `.docx`, and every document is A4 portrait with 2.54 cm margins** — it rewrites the page layout
+   after either renderer and verifies it. No agent writes docx code or sets a page size; a
+   document in any other layout is a bug in whatever produced it.
 5. **The converter is optional, like every integration here.** Without `python-docx` or `pandoc`
    the conversion fails, the Markdown stays as the deliverable, and the agent passes on the install
    command. It also never overwrites a document the creator has annotated — it compares the file's

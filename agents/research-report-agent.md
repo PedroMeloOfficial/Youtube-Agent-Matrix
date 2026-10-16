@@ -93,6 +93,21 @@ python3 "${CLAUDE_PLUGIN_ROOT}/execution/build_reader_doc.py" \
 The script writes `research-report.docx` beside it and deletes the Markdown. Report the path it
 returns.
 
+**The converter is the only thing that writes the Word file.** Never build or touch the `.docx`
+yourself — no python-docx or pandoc code of your own, no page size, margins, fonts, colours or
+styles, no editing the file after it is rendered. Every document is A4 portrait with standard
+margins, and the converter enforces that; a document that looks different was not made by it.
+Confirm the result's `"page"` field reads `A4 portrait, 2.54 cm margins` before reporting.
+
+Then verify it, every time:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/execution/build_reader_doc.py" <the .docx it returned> --check
+```
+
+It must return `"ok": true` and `"made_by_converter": true`. Anything else means the document was
+not produced the way this file says — rebuild it with the converter; never patch the `.docx`.
+
 **If it fails because neither `python-docx` nor `pandoc` is installed**, keep the Markdown, deliver
 that, and pass on the one-line install command from the error.
 
@@ -124,6 +139,8 @@ creator knows the link must exist before `metadata-agent` can put it in the desc
 - [ ] Body in the 2,000–4,500 band, or the deviation explained
 - [ ] Written entirely in OUTPUT LANGUAGE
 - [ ] Self-check section deleted; `build_reader_doc.py` ran; the `.docx` exists and the `.md` is gone
+- [ ] `build_reader_doc.py --check` on the result returns `ok: true` and `made_by_converter: true`;
+      you wrote no docx code and changed nothing in the file
 - [ ] A `-v2` file, if any, was explained to the creator
 - [ ] Wrote only the files this agent owns
 

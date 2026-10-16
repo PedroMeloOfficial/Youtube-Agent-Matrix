@@ -1,7 +1,7 @@
 # YouTube Agent Matrix
 
 A complete YouTube pre-production system for [Claude Code](https://claude.com/claude-code): an
-orchestrator that routes work to **15 specialized subagents** covering strategy, audits,
+orchestrator that routes work to **16 specialized subagents** covering strategy, audits,
 competitor intelligence, research, ideation, calendars, hooks, scripts, thumbnails, SEO, upload
 metadata, Shorts, repurposing, monetization and analytics. It works for any channel, any niche
 and any language, with three human approval gates and no required API keys.
@@ -122,14 +122,17 @@ Explicit commands, when you already know what you want:
 |---|---|
 | `/yt setup` | Language + market config → `channel-strategist` → channel profile + summary |
 | `/yt strategy` | `channel-strategist` |
+| `/yt brand` | `channel-strategist` — your channel's fixed greeting, sign-off and tagline |
 | `/yt audit` | `channel-auditor` (4 analysis lenses, parallel where supported) |
 | `/yt competitor [channel]` | `competitor-analyst` (4 analysis lenses, parallel where supported) |
 | `/yt research <topic>` | `research-agent` |
+| `/yt voice [review \| preset <description>]` | `voice-agent` — teach it how you talk, see what it learned, or build a custom voice |
 | `/yt research-report <video>` | `research-report-agent` — publishable, APA-cited report, on demand |
 | `/yt ideate [topic]` | `research-agent` → `ideation-agent` |
 | `/yt calendar` | `calendar-agent` |
 | `/yt hook <topic>` | `script-agent` in `hooks-only` mode |
 | `/yt script <idea>` | `script-agent` |
+| `/yt recording [variant]` | `script-agent` — the screenplay-format Word document for the approved variant |
 | `/yt thumbnail <video>` | `thumbnail-agent` |
 | `/yt seo <topic>` | `seo-agent` |
 | `/yt metadata <video>` | `metadata-agent` |
@@ -168,6 +171,10 @@ record. Three gates, not seven, and everything that can run in parallel does.
                       hook can pay its promise)
                                 │
                                 ▼
+              ? which voice — yours / neutral / preset
+                     (one question, not a gate)
+                                │
+                                ▼
                           script-agent
                      (hooks, then full scripts)
                                 │
@@ -198,17 +205,36 @@ At a gate the orchestrator stops, presents the options, **recommends one with a 
 and waits. Rejecting something re-runs only the rejected stage with your feedback passed through
 verbatim — never the whole chain.
 
+### Scripts in your voice
+
+Every creator talks their own way, and that is part of why people watch. Before every script the
+orchestrator asks which voice to write in:
+
+- **Your voice** — learned by `voice-agent` from samples of you talking, never guessed.
+- **Neutral** — natural spoken language with no personal style.
+- **A preset** — a different voice you describe ("more serious, documentary-style") and can reuse.
+
+To teach it your voice, run `/yt voice` and talk for a few minutes as if recording a video — a voice
+memo (transcribed locally with `faster-whisper`, if installed), dictated text, or links to your own
+videos all work. Or skip the file entirely: talk to the chat by voice and say "learn how I talk from
+this" — your message, exactly as dictated, is the sample. It only ever runs when you ask, so it
+never spends tokens in the background; when you edit a recording script by hand or publish a video
+that departs from the script, the orchestrator mentions once that you can tell it to learn from the
+difference. It uses your slang at the rate you actually use it — never as a caricature — and keeps the grammar
+correct.
+
 ---
 
-## The 15 agents
+## The 16 agents
 
 | Agent | Owns |
 |---|---|
-| `channel-strategist` | Positioning, content pillars, audience definition, voice — writes the channel profile every other agent reads, plus the one-page summary you read |
+| `channel-strategist` | Positioning, content pillars, audience definition, voice and brand lines (greeting, sign-off, tagline) — writes the channel profile every other agent reads, plus the one-page summary you read |
 | `channel-auditor` | Scored channel health across SEO, performance, content and monetization, with the single highest-leverage fix named |
 | `competitor-analyst` | The competitive landscape: keyword gaps, format gaps, audience gaps, and which of their videos are outliers |
 | `research-agent` | Verified substance for one video — facts with sources, angle gaps, current discourse, sourceable visuals |
 | `research-report-agent` | The publishable, APA-cited research report behind a video, on demand — not part of the standard chain |
+| `voice-agent` | Learns how you actually talk — slang, fillers, rhythm, what you'd never say — from recordings, your videos and your edits, so scripts sound like you |
 | `ideation-agent` | Ranked, pitchable video ideas as idea cards, scored against the channel's own pillars |
 | `calendar-agent` | The publishing calendar: cadence, production windows, pillar balance, seasonality |
 | `script-agent` | Hook options across multiple frameworks, three full retention-engineered script variants, and the clean recording script for the one you approve |
@@ -236,7 +262,7 @@ YoutubeAgents_Pipeline/
 ├── skills/
 │   └── orchestrator/
 │       └── SKILL.md             # startup sequence, routing, gates, state model
-├── agents/                      # the 15 subagent definitions, one file each
+├── agents/                      # the 16 subagent definitions, one file each
 ├── references/                  # 14 knowledge files + market files, loaded on demand
 │   ├── benchmarks.md            # SINGLE SOURCE OF TRUTH for every number
 │   ├── algorithm-guide.md       ├── analytics-guide.md
@@ -257,6 +283,8 @@ YoutubeAgents_Pipeline/
 │   ├── fetch_channel_data.py    # channel stats + recent videos (cheap path)
 │   ├── fetch_video_analytics.py # private analytics, OAuth, own channel only
 │   ├── fetch_transcript.py      # captions as timed segments
+│   ├── transcribe_audio.py      # your voice memos → verbatim text, for voice-agent
+│   ├── build_reader_doc.py      # Markdown → Word for the documents you read
 │   ├── search_competitor_videos.py  # keyword search (expensive — 100 units/call)
 │   └── utils/
 │       ├── youtube_auth.py      # API key + OAuth, credentials never in this folder
@@ -266,6 +294,7 @@ YoutubeAgents_Pipeline/
     ├── channel-profile.md       # written by channel-strategist — the full spec
     ├── channel-summary.docx     # the same thing in one readable page, for you
     ├── calendar.md, competitors.md, audit-<date>.md, monetization-plan.md
+    ├── voice/                   # how YOU talk — profile.md, samples/, presets/ (voice-agent)
     └── videos/
         └── 2026-08-24_my-video-slug/    # one folder per video, dated on entry
             ├── _state.json              # where this video is in the pipeline

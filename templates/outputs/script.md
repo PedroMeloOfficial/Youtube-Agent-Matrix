@@ -7,6 +7,7 @@
 | Target duration | `{MM:SS}` |
 | Word count | `{N}` (at `{RATE}` wpm for `OUTPUT LANGUAGE` = `{MM:SS}`) |
 | Pillar | `{P#} {NAME}` |
+| Voice | `{creator / neutral / preset:NAME}` — profile strength `{thin/usable/strong}` if applicable |
 | Archetype length band | `{MIN}`–`{MAX}` min — inside band: `{YES/NO}` |
 | Spoilers present | `{YES/NO}` |
 | Open loop | planted `{MM:SS}` → paid off `{MM:SS}` |
@@ -14,7 +15,8 @@
 | Research dossier | `{PATH}` |
 
 **Markers:** `[B-ROLL: …]` visual · `[INTERRUPT]` pattern break · `[EMPHASIS]` load-bearing line
-· `[PAUSE]` air · `⚠️ SPOILERS` spoiler block.
+· `[PAUSE]` air · `[BRAND]` the channel's fixed greeting or sign-off, verbatim · `⚠️ SPOILERS`
+spoiler block.
 
 ## `{00:00}` COLD OPEN
 
@@ -22,6 +24,8 @@
 
 `[B-ROLL: {SHOT}]`
 `[EMPHASIS]` `{THE_LINE_CARRYING_THE_OPEN}`
+
+`[BRAND]` `{OPENING_GREETING_VERBATIM — from channel-profile.md §6b; delete this line if the channel has none}`
 
 ## `{00:XX}` PROMISE
 
@@ -84,6 +88,8 @@ The point where the video's central claim gets harder than anything before it.
 
 Next video to send them to: `{TITLE}` — reason it follows: `{REASON}`
 
+`[BRAND]` `{SIGN_OFF_VERBATIM — from §6b; delete if none}`
+
 ## B-roll shot list
 
 | # | Timestamp | Shot | Source | Obtainable? | Substitute |
@@ -107,5 +113,7 @@ Every `NO` must have a substitute, or the beat is rewritten.
 - [ ] Duration sits inside the archetype band and clears the mid-roll threshold if intended (`benchmarks.md` §3)
 - [ ] Spoiler protocol complete: spoken warning + on-screen card + chapter marker
 - [ ] Exactly one CTA, at the end, specific to this video
+- [ ] Brand lines verbatim from §6b: greeting right after the hook, sign-off after the CTA
 - [ ] Reads as spoken language in OUTPUT LANGUAGE, not translated English structure
+- [ ] Written in the chosen voice; markers and slang at or below the profile's density rule
 - [ ] No unverified claim asserted as established — anything shaky marked `⚠️ verify`

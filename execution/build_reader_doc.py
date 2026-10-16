@@ -31,6 +31,11 @@ Rendering conventions -- the Markdown this reads is written for this converter:
   ``---``            ignored; spacing is handled by the styles
   ``**bold**`` / ``*italic*`` / ``` `code` ``` render as real formatting
 
+**Always A4 portrait, standard margins.** The page layout is not the caller's choice:
+after either renderer runs, every section is rewritten to A4 with Word's default
+2.54 cm margins, then read back and checked. A document on any other page size is a
+bug, whatever produced it.
+
 Requires ``python-docx``. If it is missing, ``pandoc`` is used instead when present,
 which produces a plainer but perfectly usable document. If neither exists the script
 fails with the exact install command, and the caller keeps the Markdown -- a missing
@@ -41,6 +46,7 @@ Usage:
     python execution/build_reader_doc.py INPUT.md --output path/to/Name.docx
     python execution/build_reader_doc.py INPUT.md --title "Recording Script"
     python execution/build_reader_doc.py INPUT.md --overwrite     # ignore hand edits
+    python execution/build_reader_doc.py OUTPUT.docx --check      # verify a finished document
 
 Exit 0 with ``{"ok": true, ...}``; exit 1 with ``{"ok": false, "error": {...}}``.
 """
@@ -68,6 +74,12 @@ from utils.youtube_auth import (  # noqa: E402
 )
 
 MANIFEST_NAME = ".reader-docs.json"
+
+# Every document is A4 portrait with Word's standard 2.54 cm margins -- always, whichever
+# renderer ran. Values in twentieths of a point (twips), as OOXML stores them.
+A4_W_TWIPS, A4_H_TWIPS = 11906, 16838
+MARGIN_TWIPS = 1440
+HEADER_FOOTER_TWIPS = 708
 
 # Point sizes chosen for reading off a screen at arm's length while recording.
 BODY_PT = 13
@@ -235,6 +247,7 @@ def render_with_python_docx(blocks, target: Path, title: str | None) -> None:
     from docx.shared import Pt, RGBColor
 
     doc = Document()
+    # The page layout itself is fixed afterwards by enforce_a4(), for both renderers.
 
     normal = doc.styles["Normal"]
     normal.font.name = "Calibri"
@@ -310,6 +323,106 @@ def render_with_pandoc(source: Path, target: Path) -> None:
         raise ExecutionError("pandoc timed out after 120s.") from exc
 
 
+# ------------------------------------------------------------------- page layout
+
+_PGSZ = re.compile(r"<w:pgSz\b[^>]*/>")
+_PGMAR = re.compile(r"<w:pgMar\b[^>]*/>")
+_SECTPR_OPEN = re.compile(r"<w:sectPr\b[^>]*>")
+
+
+def _a4_xml() -> tuple[str, str]:
+    m, hf = MARGIN_TWIPS, HEADER_FOOTER_TWIPS
+    pgsz = f'<w:pgSz w:w="{A4_W_TWIPS}" w:h="{A4_H_TWIPS}"/>'
+    pgmar = (
+        f'<w:pgMar w:top="{m}" w:right="{m}" w:bottom="{m}" w:left="{m}" '
+        f'w:header="{hf}" w:footer="{hf}" w:gutter="0"/>'
+    )
+    return pgsz, pgmar
+
+
+def _fix_sectpr(xml: str) -> str:
+    """Force every section's page size and margins to A4 portrait, 2.54 cm."""
+    pgsz, pgmar = _a4_xml()
+
+    def fix_one(match: re.Match) -> str:
+        sect = match.group(0)
+        sect = _PGSZ.sub(pgsz, sect) if _PGSZ.search(sect) else _SECTPR_OPEN.sub(
+            lambda m: m.group(0) + pgsz, sect, count=1
+        )
+        if _PGMAR.search(sect):
+            sect = _PGMAR.sub(pgmar, sect)
+        else:
+            sect = sect.replace(pgsz, pgsz + pgmar, 1)
+        return sect
+
+    # pandoc writes an empty, self-closing <w:sectPr />, which Word reads as its own default
+    # page (US Letter). Expand it so the size can be set explicitly.
+    xml = re.sub(r"<w:sectPr\b([^>]*?)\s*/>", r"<w:sectPr\1></w:sectPr>", xml)
+    if "<w:sectPr" not in xml:
+        return xml.replace("</w:body>", f"<w:sectPr>{pgsz}{pgmar}</w:sectPr></w:body>", 1)
+    return re.sub(r"<w:sectPr\b[^>]*>.*?</w:sectPr>", fix_one, xml, flags=re.S)
+
+
+def enforce_a4(target: Path) -> str:
+    """Rewrite the .docx so every section is A4 portrait with standard margins.
+
+    Standard library only, so it applies whichever renderer produced the file -- pandoc's
+    default reference document is US Letter, and nothing upstream may choose a page size.
+    Returns a description of the layout actually found in the file afterwards.
+    """
+    import zipfile
+
+    tmp = target.with_name(target.name + ".tmp")
+    with zipfile.ZipFile(target) as src, zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED) as dst:
+        for item in src.infolist():
+            data = src.read(item.filename)
+            if item.filename == "word/document.xml":
+                data = _fix_sectpr(data.decode("utf-8")).encode("utf-8")
+            dst.writestr(item, data)
+    tmp.replace(target)
+
+    with zipfile.ZipFile(target) as z:
+        xml = z.read("word/document.xml").decode("utf-8")
+    sizes = set(re.findall(r'<w:pgSz\b[^>]*w:w="(\d+)"[^>]*w:h="(\d+)"', xml))
+    if sizes != {(str(A4_W_TWIPS), str(A4_H_TWIPS))}:
+        raise ExecutionError(
+            "The document could not be set to A4.",
+            fix="Re-run the converter; if it repeats, report the file.",
+            details={"page_sizes_found": sorted(sizes)},
+        )
+    return "A4 portrait, 2.54 cm margins"
+
+
+def check_document(path: Path) -> dict:
+    """Inspect a finished .docx: page layout, body size, and whether this converter made it.
+
+    Standard library only. ``made_by_converter`` is true only when the file's hash matches the
+    one recorded when it was rendered -- false means it was built some other way or edited
+    afterwards (a creator's own edits are fine; an agent's are a bug).
+    """
+    import zipfile
+
+    if not path.exists() or path.suffix.lower() != ".docx":
+        raise InputInvalid(f"{path} is not an existing .docx file.", fix="Pass the rendered document.")
+    with zipfile.ZipFile(path) as z:
+        xml = z.read("word/document.xml").decode("utf-8")
+        styles = z.read("word/styles.xml").decode("utf-8") if "word/styles.xml" in z.namelist() else ""
+    sizes = sorted(set(re.findall(r'<w:pgSz\b[^>]*w:w="(\d+)"[^>]*w:h="(\d+)"', xml)))
+    a4 = sizes == [(str(A4_W_TWIPS), str(A4_H_TWIPS))]
+    normal = re.search(r'w:styleId="Normal".*?</w:style>', styles, re.S)
+    half_points = re.search(r'<w:sz w:val="(\d+)"', normal.group(0)) if normal else None
+    body_pt = int(half_points.group(1)) / 2 if half_points else None
+    recorded = load_manifest(path.parent).get(path.name)
+    return {
+        "file": str(path),
+        "page_ok": a4,
+        "page_sizes_twips": sizes,
+        "body_pt": body_pt,
+        "body_ok": body_pt == BODY_PT,
+        "made_by_converter": bool(recorded) and recorded == sha256_of(path),
+    }
+
+
 def pick_renderer():
     try:
         import docx  # noqa: F401
@@ -335,7 +448,12 @@ def main() -> None:
     ap = argparse.ArgumentParser(
         description="Render a creator-facing Markdown file as a Word document."
     )
-    ap.add_argument("input", help="the Markdown file to render")
+    ap.add_argument("input", help="the Markdown file to render (or, with --check, a .docx)")
+    ap.add_argument(
+        "--check",
+        action="store_true",
+        help="inspect an existing .docx instead: A4 page, body size, rendered by this script",
+    )
     ap.add_argument("--output", help="target .docx (default: same name, .docx extension)")
     ap.add_argument("--title", help="document title; defaults to the file's first H1")
     ap.add_argument(
@@ -351,6 +469,12 @@ def main() -> None:
     args = ap.parse_args()
 
     source = Path(args.input).expanduser()
+    if args.check:
+        try:
+            result = check_document(source)
+        except ExecutionError as err:
+            die(err)
+        emit({"ok": result["page_ok"] and result["body_ok"], **result}, 0 if result["page_ok"] and result["body_ok"] else 1)
     if not source.exists():
         die(InputInvalid(f"{source} does not exist.", fix="Check the path and try again."))
     if source.suffix.lower() not in (".md", ".markdown", ".txt"):
@@ -382,6 +506,8 @@ def main() -> None:
         else:
             render_with_pandoc(source, target)
 
+        page = enforce_a4(target)
+
         manifest = load_manifest(target.parent)
         manifest[target.name] = sha256_of(target)
         save_manifest(target.parent, manifest)
@@ -401,6 +527,7 @@ def main() -> None:
                 "output": str(target),
                 "renderer": renderer,
                 "disposition": disposition,
+                "page": page,
                 "markdown_source": source_state,
                 "hand_edited_preserved": "-v" in target.stem and target != output,
             }

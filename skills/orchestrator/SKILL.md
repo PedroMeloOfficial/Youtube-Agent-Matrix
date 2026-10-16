@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: Complete YouTube channel operating system — routes work across 15 specialized subagents covering strategy, channel audits, competitor intelligence, research, publishable research reports, idea generation, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work — growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
+description: Complete YouTube channel operating system — routes work across 16 specialized subagents covering strategy, channel audits, competitor intelligence, research, publishable research reports, idea generation, learning the creator's own voice, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work — growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
 ---
 
 # YouTube Agent Matrix — Orchestrator
@@ -28,70 +28,10 @@ installed files, shared across every channel). This is what gives each channel i
 **If it does not exist, this is a first run.** Do the language setup *before* any other work,
 then continue with whatever the creator originally asked for.
 
-Ask exactly this, and nothing else, as your first message:
-
-```
-Before we start — what language should I work in?
-
-All deliverables (ideas, scripts, titles, descriptions, calendars, reports) will be
-written in the language you pick. I'll save it so you're only asked once.
-
-  1. English
-  2. Português (Brasil)
-  3. Español
-  4. Français
-  5. Deutsch
-  6. Italiano
-  7. 日本語
-  8. Other — just tell me which
-
-Reply with a number or the language name.
-```
-
-Then write `workspace/config.json`:
-
-```json
-{
-  "output_language": "pt-BR",
-  "output_language_name": "Português (Brasil)",
-  "channel_profile": "workspace/channel-profile.md",
-  "channel_type_primary": null,
-  "channel_type_secondary": null,
-  "markets": {
-    "mix": [ { "code": "BR", "share": 100 } ],
-    "source": "declared"
-  },
-  "created_at": "YYYY-MM-DD"
-}
-```
-
-Then ask the **second and last** setup question, in the language they just chose:
-
-```
-And where is your audience? Not where you live — where the people watching are.
-This decides what a view is actually worth, when advertisers pay most, and which
-disclosure rules apply to you.
-
-  1. Brazil
-  2. United States
-  3. Mixed — tell me roughly, e.g. "80% Brazil, 20% US"
-  4. I don't know yet
-
-If you don't know, say so — I'll assume your audience matches your language and
-correct it the first time I see your real Analytics.
-```
-
-Write the answer into `markets.mix` with shares summing to 100 and `source: "declared"`.
-
-**Why the audience and not the creator.** Advertisers bid on the viewer's market, not the
-uploader's. A creator living in Canada whose viewers are Brazilian has a `BR` channel. Getting
-this backwards produces revenue estimates wrong by an order of magnitude — it is the most
-expensive mistake available in this system.
-
-If they pick "I don't know", infer from `output_language`, set `source: "declared"`, and say in
-one line that you assumed it and will correct it from Analytics later.
-
-Confirm both answers in one line, in the chosen language, then proceed with the original request.
+Read `templates/outputs/first-run-setup.md` and follow it exactly: the language question, the
+`config.json` it writes, then the audience-market question — the **audience's** market, not the
+creator's, because advertisers bid on the viewer. Confirm both answers in one line, then proceed
+with the original request.
 
 **If it exists**, load it silently. Never re-ask either question. The creator can change either
 at any time by saying so — update the file and confirm in one line.
@@ -151,11 +91,12 @@ authoritative where they conflict.
 
 | Agent | Owns | Reads |
 |---|---|---|
-| `channel-strategist` | Positioning, pillars, audience, voice — writes the channel profile **and its one-page summary** | benchmarks, algorithm, repurposing, localization, markets |
+| `channel-strategist` | Positioning, pillars, audience, voice, brand lines — writes the channel profile **and its one-page summary** | benchmarks, algorithm, repurposing, localization, markets |
 | `channel-auditor` | Health score across SEO, performance, content, monetization | benchmarks, data-sources + lens refs: seo, thumbnail-ctr, analytics, algorithm, repurposing, monetization, localization, markets |
 | `competitor-analyst` | Competitive landscape, keyword and format gaps, outliers | benchmarks, seo, algorithm, data-sources, markets |
 | `research-agent` | Verified substance for one video: facts, angle gaps, discourse, sourceable visuals | benchmarks |
 | `research-report-agent` | Publishable, APA-cited research report for one video — on-demand, not part of the chain | benchmarks, research-report-standard |
+| `voice-agent` | How the creator actually talks — the voice profile, learned from samples and edits, plus custom voice presets | — (samples only) |
 | `ideation-agent` | Ranked, pitchable video ideas as idea cards | benchmarks, algorithm, seo, hook-library |
 | `calendar-agent` | Publishing calendar, production windows, pillar balance, seasonality | benchmarks, repurposing, markets |
 | `script-agent` | Hook options, 3 full retention-engineered script variants, **and** the clean recording document for the approved one | benchmarks, hook-library, retention, localization (non-English) |
@@ -177,9 +118,11 @@ authoritative where they conflict.
 |---|---|
 | `/yt setup` | Language + market config → `channel-strategist` → channel profile + summary |
 | `/yt strategy` | `channel-strategist` |
+| `/yt brand` | `channel-strategist`, brand lines only — greeting, sign-off, tagline (§6b) |
 | `/yt audit` | `channel-auditor` (4 analysis lenses, parallel where supported) |
 | `/yt competitor [channel]` | `competitor-analyst` (4 analysis lenses, parallel where supported) |
 | `/yt research <topic>` | `research-agent` |
+| `/yt voice [review \| preset <description>]` | `voice-agent` — no argument starts a voice session (see *Voice*) |
 | `/yt research-report <video>` | `research-report-agent` — needs `research-dossier.md` and a thesis: from the creator's brief, or confirm the one the approved script argues |
 | `/yt ideate [topic]` | `research-agent` → `ideation-agent` |
 | `/yt calendar` | `calendar-agent` |
@@ -203,9 +146,11 @@ not interrogate the creator about it.
 | They say something like | Enter at |
 |---|---|
 | "my channel isn't growing", "what's wrong with my channel" | `channel-auditor` |
+| "channel slogan", "catchphrase", "how I open my videos", "a name for my audience" | `channel-strategist` (brand lines only) — present the options, the creator picks, then re-run it to write §6b |
 | "who am I competing with", "what is [channel] doing" | `competitor-analyst` |
 | "what should I make next", "give me ideas" | `research` → `ideation` |
 | "I want to publish my research", "a document people can read about this" | `research-report-agent` |
+| "learn how I talk", "learn from this message", "make a voice preset" — an explicit request only | `voice-agent` — pass their words verbatim |
 | "I want to make a video about X" | **full chain** |
 | "write me a hook", "fix my intro", "first 30 seconds" | `script-agent` (`hooks-only`) |
 | "write the script" | `script-agent` (`full`) |
@@ -231,6 +176,8 @@ ideation-agent  ──▶  6 ranked idea cards
       │
 seo-agent                        (title direction, so the hook can pay it)
       │
+   ? voice — creator / neutral / preset   (one question, not a gate — see Voice)
+      │
 script-agent  ──▶  hooks.md + 3 variants: narrative / instructional / argumentative
       │
    ◆ GATE 2 — creator picks one variant
@@ -246,6 +193,39 @@ thumbnail-agent + metadata-agent + shorts-agent   (parallel — all need only th
 
 Three gates, not seven. Everything that can run in parallel does — the recording script is the
 one deliberate exception, written first so the creator can start recording while packaging runs.
+
+### Voice — ask before every script
+
+Before **any** `script-agent` run that writes words (`full`, `hooks-only`, `rewrite`), ask once, in
+one short message, which voice to write in — and recommend the one used last time:
+
+- **creator** — how they talk, from `workspace/voice/profile.md` (name its strength: thin / usable /
+  strong). If no profile exists, say so and offer a voice session first.
+- **neutral** — natural spoken language with no personal style.
+- **preset** — a saved voice from `workspace/voice/presets/`, or a new one they describe now
+  (`voice-agent` `preset` mode builds it first).
+
+Pass the answer to `script-agent` as `VOICE`, record it in `_state.json` `choices.voice` and in
+`_handoff.md`. Never assume it from a previous video — the creator chose to be asked every time.
+
+**Voice session** (`/yt voice`, or the creator offers): ask them to talk for 2–5 minutes as if
+recording a video — about something from their pillars they care about, a story that happened to
+them, or a reaction to something recent. Accept an audio file path, dictated text or a pasted
+transcript, plus any links to their own videos. Then run `voice-agent` `learn`.
+
+**The chat itself is a sample.** When the creator asks you to learn from what they just said — or
+from what they've said in this conversation — pass those messages to `voice-agent` **complete and
+verbatim**, exactly as received: never summarized, translated, corrected or trimmed of fillers.
+Say whether each was dictated (voice) or typed if you can tell, and whether they were talking as if
+recording a video; otherwise say *unknown*.
+
+**`voice-agent` runs only on the creator's command** — `/yt voice` or an explicit request to learn.
+Never route to it on your own, never analyse the creator's messages for voice unless asked, and
+nothing about voice runs in the background: every run costs tokens. A complaint like "this doesn't
+sound like me" is a script correction — fix the script, and at most mention once that they can say
+"learn from this" if they want it remembered. The only proactive step allowed is a one-line
+mention, never a run, when a `-v2` recording document appears or a published video could be
+compared to its script.
 
 ---
 
@@ -272,29 +252,6 @@ the folder name — rename it and every path in `_state.json` breaks.
 Channel-level artifacts live directly in `workspace/`, never inside a video folder:
 `config.json` · `channel-profile.md` · `channel-summary.docx` · `calendar.md` · `audit-YYYY-MM-DD.md` ·
 `competitors.md` · `monetization-plan.md` · `analytics-YYYY-MM-DD.md`.
-
-### Contents of a video folder
-
-```
-2026-08-24_how-compilers-actually-work/
-├── _state.json                  ← orchestrator only
-├── _handoff.md                  ← orchestrator only
-├── _log.md                      ← append-only, every agent
-├── research-dossier.md
-├── idea-cards.md
-├── hooks.md
-├── script-a-narrative.md
-├── script-b-instructional.md
-├── script-c-argumentative.md
-├── script-recording.docx        ← written after GATE 2, for the approved variant only
-├── research-report.docx         ← optional, on demand, not part of the chain
-├── seo-package.md
-├── thumbnail-brief.md
-├── metadata-package.md
-├── shorts-plan.md
-├── repurpose-plan.md
-└── production-package.md        ← the final deliverable
-```
 
 ### Two audiences, two files
 
@@ -342,6 +299,7 @@ This is what prevents one agent from silently overwriting another's work.
 | `workspace/competitors.md` | `competitor-analyst` |
 | `workspace/monetization-plan.md` | `monetization-agent` |
 | `workspace/analytics-*.md` | `analytics-agent` |
+| `workspace/voice/` — `profile.md`, `samples/`, `presets/` | `voice-agent` |
 | `workspace/config.json` | **orchestrator only** |
 
 Any agent may **read** any file. Writing outside its own row is a defect — if an agent believes
@@ -363,7 +321,7 @@ Update after **every** stage:
   "stage": "script",
   "awaiting": "GATE 2 — variant selection",
   "approved_through": "GATE 1",
-  "choices": { "idea": null, "hook": null, "script": null, "thumbnail": null, "title": null },
+  "choices": { "idea": null, "voice": null, "hook": null, "script": null, "thumbnail": null, "title": null },
   "files": [],
   "publish_date": null,
   "created_at": "YYYY-MM-DD",
@@ -379,12 +337,8 @@ reason there is no write-conflict in this system.
 
 ### `_handoff.md` — the anti-drift file
 
-Subagents start with **no memory of the conversation**. They know only what you put in the
-prompt. The single most common failure in a system like this is an agent producing something
-technically fine but misaligned with a decision made three stages earlier — a thumbnail concept
-built on the script variant the creator rejected.
-
-`_handoff.md` is how you prevent that. **Rewrite it before every delegation**, following
+Subagents start with **no memory of the conversation** — the classic failure is a thumbnail built
+on the variant the creator rejected. **Rewrite `_handoff.md` before every delegation**, following
 `templates/outputs/handoff.md`. It carries:
 
 - What was approved at each gate so far, and **what was rejected and why**
@@ -400,16 +354,11 @@ Every subagent prompt includes its path, and every agent is told to read it firs
 Every agent appends one line when it finishes. Nobody edits existing lines.
 
 ```
-2026-08-24 14:02 · research-agent · wrote research-dossier.md · 3 angles found, no timing hook · 2 claims marked unverified
-2026-08-24 14:31 · ideation-agent · wrote idea-cards.md · 6 cards, recommended #3
 2026-08-24 14:35 · orchestrator · GATE 1 passed · creator approved #3, rejected #1 as "too broad"
-2026-08-24 15:10 · script-agent · wrote hooks.md + 3 variants · used hooks 2/5/7 · recommended C
 ```
 
-Format: `YYYY-MM-DD HH:MM · agent · what it wrote · the one thing worth knowing`.
-
-This is what lets you resume a video weeks later without reconstructing the reasoning, and what
-lets you explain to the creator why something looks the way it does.
+Format: `YYYY-MM-DD HH:MM · agent · what it wrote · the one thing worth knowing`. It is how you
+resume a video weeks later without reconstructing the reasoning.
 
 ### Before starting any stage
 
@@ -424,25 +373,13 @@ lets you explain to the creator why something looks the way it does.
 At a gate you **stop**. Present, recommend, wait.
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-◆ GATE 2 — Script variant
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Three variants in workspace/videos/<slug>/
-
-  A · NARRATIVE       14 min · opens on [scene]
-  B · INSTRUCTIONAL   12 min · structured as three problems
-  C · ARGUMENTATIVE   11 min · thesis: [claim]
-
-Recommendation: C — [one-line reason].
-
-Reply A, B or C — or tell me what to change in any of them.
-Once you pick, I build the recording document for it and
-run thumbnail, metadata and Shorts in parallel.
+◆ GATE 2 — Script variant · three variants in workspace/videos/<slug>/
+  A · NARRATIVE 14 min · opens on [scene]   B · INSTRUCTIONAL 12 min · three problems
+  C · ARGUMENTATIVE 11 min · thesis: [claim]
+Recommendation: C — [one-line reason]. Reply A, B or C, or say what to change.
 ```
 
-**Always recommend, with a one-line reason.** The gate is for approval, not for offloading
-the thinking onto the creator.
+**Always recommend, with a one-line reason** — the gate is for approval, not offloading the thinking.
 
 Accept loose approvals ("go with C", "the second one", "yeah do it"). Ask once, briefly, only
 if genuinely ambiguous.
@@ -479,7 +416,7 @@ the file.
 
 ## Quality gates
 
-Before delivering any subagent output, check three things:
+Before delivering any subagent output, check four things:
 
 1. **Specificity** — is every recommendation actionable for *this* channel, at *this* size, in
    *this* niche? "Post consistently" fails. "Ship 2 long-form per week to hit the 12+/month
@@ -487,6 +424,9 @@ Before delivering any subagent output, check three things:
 2. **Grounding** — does every cited number trace to `references/benchmarks.md`? Fabricated
    statistics are the worst failure this system can produce.
 3. **Completeness** — are all sections of the output template present?
+4. **Word documents** — run `execution/build_reader_doc.py <file.docx> --check` on every `.docx` an
+   agent delivers. Anything but `ok: true` and `made_by_converter: true` (A4, standard body size,
+   rendered by the converter) means the agent built it another way: re-run that agent once.
 
 If a check fails: name the failing check, re-read the relevant reference, regenerate **only**
 the failing sections, re-check. After two attempts, deliver with an explicit caveat rather
@@ -505,6 +445,7 @@ The matrix works with zero credentials. Every integration degrades gracefully.
 | DataForSEO MCP | Search volume, YouTube SERP, keyword difficulty, trends | WebSearch |
 | Image-generation MCP (Nano Banana / Gemini) | Actual thumbnail images | Text prompts the creator pastes into any generator |
 | `python-docx` or `pandoc` (local) | The recording script and channel summary as Word documents | The same content as Markdown, with the install command named |
+| `faster-whisper` or `openai-whisper` (local) | Voice recordings transcribed for `voice-agent` | The creator dictates or pastes the text |
 
 **Detection:** try the call. If it fails, fall back and say so in one line. **Never block a
 workflow because an integration is missing.** Full setup in `references/data-sources.md`.
@@ -533,10 +474,6 @@ Load on demand. Never pre-load all of them. Never reload one already in context.
 | `localization-guide.md` | Non-English language work, and markets with no dedicated file |
 | `data-sources.md` | Setting up or debugging an integration |
 | `research-report-standard.md` | Publishable research reports only — `research-report-agent` |
-
-**Market files are not optional for non-US channels.** Every RPM, CPM and sponsorship
-figure in `benchmarks.md` is US-baseline. Applying them unadjusted to a Brazilian, Indian or
-Indonesian channel produces revenue projections wrong by an order of magnitude.
 
 ---
 

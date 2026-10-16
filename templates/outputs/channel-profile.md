@@ -70,6 +70,25 @@ Jobs: `growth` · `authority` · `retention` · `differentiation`. Shares sum to
 `{ELEMENT}` — used `{WHEN}` · `{ELEMENT}` — used `{WHEN}`
 **Never say / never do:** `{HARD_NOS}`
 
+This section is the channel's **tone** and its hard limits. How the creator actually talks — their
+slang, fillers, rhythm — is learned from samples by `voice-agent` and lives in
+`workspace/voice/profile.md`; do not try to capture it here.
+
+### 6b. Brand lines
+
+Fixed lines the creator says or shows **word for word, every time** — repetition is what makes
+them work, so scripts never paraphrase them. Leave a row `⟨NONE⟩` if the channel has none; never
+invent one here without the creator choosing it.
+
+| Line | Exact text | Where it goes | Every video? |
+|---|---|---|---|
+| Opening greeting | `{TEXT_OR_NONE}` | Right after the hook — never before it | `{YES / NO}` |
+| Sign-off | `{TEXT_OR_NONE}` | The very last line, after the CTA | `{YES / NO}` |
+| Audience name | `{NAME_OR_NONE}` | Inside the greeting, sign-off and direct address | — |
+| Tagline (written, not spoken) | `{TEXT_OR_NONE}` | Channel "About", banner, description's fixed channel block | — |
+
+Chosen by the creator on `{YYYY-MM-DD}` from the options in the strategist's return summary.
+
 ## 7. Formats
 
 | Format | Pillar(s) | Length | Effort | Cadence | Status |

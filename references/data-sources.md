@@ -127,6 +127,8 @@ The `execution/` folder wraps the APIs above in a small, predictable command-lin
 | `search_competitor_videos.py` | Topic or channel search — uses the expensive `search.list` call | API key |
 | `fetch_transcript.py` | Transcript retrieval, with a cascade of methods and graceful failure | API key or a local extractor |
 | `fetch_video_analytics.py` | Private metrics for an owned channel | OAuth |
+| `build_reader_doc.py` | Renders creator-facing Markdown as a Word document; never overwrites a hand-edited one | `python-docx` or `pandoc` — otherwise the Markdown stays |
+| `transcribe_audio.py` | Verbatim local transcript of a creator's voice recording, fillers kept, for `voice-agent` | `faster-whisper` or `openai-whisper` — otherwise the creator pastes text |
 | `utils/youtube_auth.py` | Resolves the API key and the OAuth token | — |
 | `utils/quota_tracker.py` | Tracks unit consumption and warns before exhaustion | — |
 
