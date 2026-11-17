@@ -1,10 +1,13 @@
 # YouTube Agent Matrix
 
-A complete YouTube pre-production system for [Claude Code](https://claude.com/claude-code): an
+A complete YouTube production system for [Claude Code](https://claude.com/claude-code): an
 orchestrator that routes work to **16 specialized subagents** covering strategy, audits,
 competitor intelligence, research, ideation, calendars, hooks, scripts, thumbnails, SEO, upload
-metadata, Shorts, repurposing, monetization and analytics. It works for any channel, any niche
-and any language, with three human approval gates and no required API keys.
+metadata, Shorts, repurposing, monetization and analytics — **plus a video editor** that turns your
+raw footage into a **Final Cut Pro project**: takes chosen, mistakes and pauses cut, animations,
+camera moves, sound effects and music, each on its own layer, ready for you to finish by hand. It
+works for any channel, any niche and any language, with three human approval gates and no
+required API keys.
 
 ---
 
@@ -141,6 +144,7 @@ Explicit commands, when you already know what you want:
 | `/yt monetize` | `monetization-agent` |
 | `/yt analyze` | `analytics-agent` |
 | `/yt video <topic>` | **The full production chain** — see below |
+| `/yt edit [setup \| test \| return <file> \| learnings \| style \| intro]` | **The video editor** — your recorded footage into a Final Cut Pro project, see below |
 
 These are phrases the orchestrator recognizes, not registered slash commands — type them in the
 conversation. Natural language works identically.
@@ -225,6 +229,44 @@ correct.
 
 ---
 
+## Editing your video in Final Cut Pro
+
+You record; `/yt edit` turns the raw footage into a **Final Cut Pro project** (FCPXML) you import with
+**File → Import → XML…** — the timeline already built, every part on its own layer, nothing baked in.
+You review, finish by hand, export.
+
+```
+briefing → footage → cuts ◆ → motion plan → assets → motion render ◆ → camera → sound ◆
+```
+
+◆ = a Final Cut project for you to review: `<video>_cuts_v01`, `<video>_motion_v01`, `<video>_final_v01`.
+One stage at a time, only when you say yes; you can stop and pick up days later.
+
+- **Cuts** — the takes chosen (the last complete one, unless you said otherwise out loud while
+  recording), mistakes, false starts and dead pauses removed. Every doubt becomes a **to-do marker**
+  starting with `[C]` instead of a guess; comic pauses marked `[BEAT]` in the script are kept.
+- **Animations** — planned with you by chat first, then built with [HyperFrames](https://github.com/heygen-com/hyperframes)
+  in your style: full-screen scenes as MP4, overlays as ProRes 4444 with transparency, synced to
+  the words that trigger them. Numbers on screen come from your research report, with the source.
+- **Camera** — punch-ins, slow push, a different framing on every cut to hide jump cuts, moves that
+  match the animations, your face kept at the right height — as keyframes on the original clips.
+- **Sound** — effects from **your own library**, only on what is seen, levelled against your voice;
+  optional music that dips under speech.
+- **Your adjustments win.** Fix anything in Final Cut and export it back (`/yt edit return <file>`):
+  the matrix rebuilds the cut from yours and reads your markers as instructions.
+- **It learns your taste.** Corrections that hold for other videos go into a notebook; when you say
+  so, they update your edit profile. Give it 5–10 clips of editing you like and it measures how they
+  move (`/yt edit style`).
+- **Your files are never touched** — read only, never moved, copied or renamed. Every delivery is a
+  new version; nothing is written inside a Final Cut library.
+
+**Setup, once:** `/yt edit setup` checks your Mac, asks before installing anything (ffmpeg, a local
+transcription model that runs on Apple Silicon, Node.js for animations), asks a few questions about
+your taste, and builds a short **test project** you open in Final Cut to confirm everything lands
+where it should. Everything runs locally and free. Full detail: `references/editing/`.
+
+---
+
 ## The 16 agents
 
 | Agent | Owns |
@@ -250,6 +292,20 @@ Each agent loads only the reference files it needs and writes its output to a fi
 orchestrator summarizes in a couple of lines and points you at it — it never pastes a full
 deliverable into the conversation.
 
+### The editor and its 8 agents
+
+| Agent | Owns |
+|---|---|
+| `skills/editor` (skill) | Talks to you, keeps the editing state, runs the stages and checkpoints, builds every Final Cut project |
+| `footage-agent` | Inventory of your raw files, sync by sound, word-timed transcription, your spoken editing notes |
+| `cut-agent` | The first clean cut: takes, mistakes, pauses — and a marker for every doubt |
+| `edit-style-agent` | Your edit profile: your taste in motion, camera, cuts and sound, measured from references you like |
+| `motion-plan-agent` | The animation plan, reviewed by chat before anything is animated |
+| `asset-agent` | Official logos, open-licence icons, web captures the animations need |
+| `motion-render-agent` | Builds and renders each animation, frame-exact, and your reusable channel intro |
+| `camera-agent` | Camera moves on you, matched to speech and animations |
+| `sound-agent` | Sound effects from your library and optional ducked music, levelled against your voice |
+
 ---
 
 ## Folder map
@@ -260,9 +316,11 @@ YoutubeAgents_Pipeline/
 │   ├── plugin.json              # plugin manifest
 │   └── marketplace.json         # lets this folder register as its own marketplace
 ├── skills/
-│   └── orchestrator/
-│       └── SKILL.md             # startup sequence, routing, gates, state model
-├── agents/                      # the 16 subagent definitions, one file each
+│   ├── orchestrator/
+│   │   └── SKILL.md             # startup sequence, routing, gates, state model
+│   └── editor/
+│       └── SKILL.md             # /yt edit: stages, checkpoints, deliveries to Final Cut
+├── agents/                      # 16 pre-production + 8 editing agents, one file each
 ├── references/                  # 14 knowledge files + market files, loaded on demand
 │   ├── benchmarks.md            # SINGLE SOURCE OF TRUTH for every number
 │   ├── algorithm-guide.md       ├── analytics-guide.md
@@ -273,28 +331,34 @@ YoutubeAgents_Pipeline/
 │   ├── community-guide.md       ├── localization-guide.md
 │   ├── data-sources.md          # integrations and their fallbacks
 │   ├── research-report-standard.md  # thesis, data and citation rules for published reports
-│   └── markets/                 # what a view is WORTH, by market
-│       ├── _index.md            # schema + how to blend a multi-market audience
-│       ├── br.md                ├── us.md
+│   ├── markets/                 # what a view is WORTH, by market
+│   │   ├── _index.md            # schema + how to blend a multi-market audience
+│   │   ├── br.md                ├── us.md
+│   └── editing/                 # editing craft: principles, Final Cut delivery, footage, cuts, motion,
+│                                #   HyperFrames, assets, camera, sound, style profile, setup
 ├── templates/
 │   ├── channel-types/           # _schema.md + 14 channel archetypes
 │   └── outputs/                 # deliverable formats agents write into
-├── execution/                   # optional Python layer for live YouTube data
+├── execution/                   # optional Python layer: live YouTube data, Word documents, editing
 │   ├── fetch_channel_data.py    # channel stats + recent videos (cheap path)
 │   ├── fetch_video_analytics.py # private analytics, OAuth, own channel only
 │   ├── fetch_transcript.py      # captions as timed segments
 │   ├── transcribe_audio.py      # your voice memos → verbatim text, for voice-agent
 │   ├── build_reader_doc.py      # Markdown → Word for the documents you read
 │   ├── search_competitor_videos.py  # keyword search (expensive — 100 units/call)
-│   └── utils/
-│       ├── youtube_auth.py      # API key + OAuth, credentials never in this folder
-│       └── quota_tracker.py     # daily quota ledger and pre-flight checks
+│   ├── utils/
+│   │   ├── youtube_auth.py      # API key + OAuth, credentials never in this folder
+│   │   └── quota_tracker.py     # daily quota ledger and pre-flight checks
+│   └── edit/                    # the video editor's scripts: transcription, cuts, camera curves,
+│                                #   sound placement, FCPXML build/read, tests (see requirements.txt)
 └── workspace/                   # everything the matrix produces about YOUR channel
     ├── config.json              # language, market, channel type (created on first run)
     ├── channel-profile.md       # written by channel-strategist — the full spec
     ├── channel-summary.docx     # the same thing in one readable page, for you
     ├── calendar.md, competitors.md, audit-<date>.md, monetization-plan.md
     ├── voice/                   # how YOU talk — profile.md, samples/, presets/ (voice-agent)
+    ├── edit-config.json         # your editing setup answers (/yt edit setup)
+    ├── edit-profile/            # your editing taste, references, reusable pieces, sound index
     └── videos/
         └── 2026-08-24_my-video-slug/    # one folder per video, dated on entry
             ├── _state.json              # where this video is in the pipeline
@@ -307,7 +371,9 @@ YoutubeAgents_Pipeline/
             ├── research-report.docx     # optional — publishable research report, on demand
             ├── seo-package.md           ├── thumbnail-brief.md
             ├── metadata-package.md      ├── shorts-plan.md
-            └── production-package.md    # the final deliverable
+            ├── production-package.md    # the final pre-production deliverable
+            └── edit/                    # editing: state, transcript, cuts, motion, camera, sound,
+                                         #   and deliveries/<video>_cuts_v01.fcpxml …
 ```
 
 ### One folder per video
@@ -498,10 +564,12 @@ channel.
 
 ## Not covered
 
-This is a **pre-production and channel-operations** system. It ends where the camera starts.
+This is a **pre-production, editing and channel-operations** system. It does not hold the camera,
+and it does not do the final finishing in Final Cut — you do.
 
 - **Recording** — no capture, no lighting, no audio engineering.
-- **Editing** — no cuts, no colour, no sound design, no rendering.
+- **Colour grading, final mix and export** — the editor delivers an editable Final Cut project;
+  grading, the final mix and the export are yours. No editor other than Final Cut Pro is supported.
 - **Publishing** — nothing is uploaded on your behalf. The metadata package is copy-paste ready;
   you paste it.
 - **Thumbnail rendering** — the deliverable is the concepts and their English generation
@@ -511,7 +579,8 @@ This is a **pre-production and channel-operations** system. It ends where the ca
   collaborations; it does not post for you.
 
 What it does own: everything from "I have a channel" to "I have a script, a title, a description,
-a thumbnail brief and a Shorts plan sitting in a folder, approved and ready to shoot."
+a thumbnail brief and a Shorts plan sitting in a folder, approved and ready to shoot" — and from
+"I recorded it" to "my Final Cut timeline is built and waiting for my finishing touches."
 
 ---
 
@@ -531,6 +600,17 @@ are reconciled explicitly; archetypes are classified on five axes instead of pic
 mutually exclusive buckets, and every agent reads them rather than only two; hooks have a named
 taxonomy; markets and languages are first-class instead of assumed to be US English; and the
 system carries approval gates with explicit state.
+
+### The editor
+
+The editing workflow and its craft guides are adapted from
+[**fluxo-de-edicao**](https://github.com/LeiteZ/fluxo-de-edicao) by Lucas Leite (MIT) — an eight-stage
+editing workflow with Claude Code tested on real videos: its principles, and its guides for cuts,
+motion craft, HyperFrames, assets, camera and sound effects. They were translated and adapted to this
+matrix's architecture (generic for any creator, one writer per file, taste in a profile, delivery to
+Final Cut Pro); each adapted file names its source. Licence text in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Animations are rendered with
+[HyperFrames](https://github.com/heygen-com/hyperframes) (Apache-2.0).
 
 ---
 

@@ -1,0 +1,10 @@
+# Editing layer only (execution/edit/). Install into the dedicated virtualenv, never the
+# system Python and never inside the plugin folder:
+#   python3 -m venv ~/.local/share/youtube-agent-matrix/edit-venv
+#   ~/.local/share/youtube-agent-matrix/edit-venv/bin/pip install -r execution/edit/requirements.txt
+# System tools, installed separately: ffmpeg/ffprobe (brew install ffmpeg), xmllint (ships with
+# macOS), Node.js for HyperFrames (brew install node).
+numpy>=1.26
+mlx-whisper>=0.4 ; sys_platform == "darwin" and platform_machine == "arm64"
+faster-whisper>=1.1
+opencv-python-headless>=4.9

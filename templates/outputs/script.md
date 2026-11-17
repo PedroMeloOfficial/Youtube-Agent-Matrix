@@ -15,7 +15,8 @@
 | Research dossier | `{PATH}` |
 
 **Markers:** `[B-ROLL: …]` visual · `[INTERRUPT]` pattern break · `[EMPHASIS]` load-bearing line
-· `[PAUSE]` air · `[BRAND]` the channel's fixed greeting or sign-off, verbatim · `⚠️ SPOILERS`
+· `[PAUSE]` air · `[BEAT]` a comic or dramatic pause the edit must keep · `[SCREEN: …]` screen recording
+· `[DATA: … — source]` a fact on screen, with its source · `[BRAND]` the channel's fixed greeting or sign-off, verbatim · `⚠️ SPOILERS`
 spoiler block.
 
 ## `{00:00}` COLD OPEN

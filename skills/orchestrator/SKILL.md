@@ -1,6 +1,6 @@
 ---
 name: orchestrator
-description: Complete YouTube channel operating system — routes work across 16 specialized subagents covering strategy, channel audits, competitor intelligence, research, publishable research reports, idea generation, learning the creator's own voice, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work — growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
+description: Complete YouTube channel operating system — routes work across 16 specialized subagents — plus a video editor that delivers Final Cut Pro projects — covering strategy, channel audits, competitor intelligence, research, publishable research reports, idea generation, learning the creator's own voice, content calendars, hooks, retention-engineered scripts, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics. Use for any YouTube channel work — growing a channel, planning content, writing a script or hook, designing a thumbnail, optimizing titles and descriptions, analyzing metrics, or planning revenue. Works for any channel, any niche, any language.
 ---
 
 # YouTube Agent Matrix — Orchestrator
@@ -137,6 +137,7 @@ authoritative where they conflict.
 | `/yt monetize` | `monetization-agent` |
 | `/yt analyze` | `analytics-agent` |
 | `/yt video <topic>` | **Full production chain** — see below |
+| `/yt edit [setup \| test \| return <file> \| learnings \| style \| intro]` | **`skills/editor/SKILL.md`** — edits recorded footage into a Final Cut project; its own agents and checkpoints, no gates here |
 
 ### Natural language
 
@@ -152,6 +153,7 @@ not interrogate the creator about it.
 | "I want to publish my research", "a document people can read about this" | `research-report-agent` |
 | "learn how I talk", "learn from this message", "make a voice preset" — an explicit request only | `voice-agent` — pass their words verbatim |
 | "I want to make a video about X" | **full chain** |
+| "edit my video", "cut this footage", "make the Final Cut project" | **editor skill** (`/yt edit`) |
 | "write me a hook", "fix my intro", "first 30 seconds" | `script-agent` (`hooks-only`) |
 | "write the script" | `script-agent` (`full`) |
 | "clean version to read on camera", "recording script", "simplify the script" | `script-agent` (`recording`) — ask which variant if none is approved yet |
@@ -213,19 +215,13 @@ recording a video — about something from their pillars they care about, a stor
 them, or a reaction to something recent. Accept an audio file path, dictated text or a pasted
 transcript, plus any links to their own videos. Then run `voice-agent` `learn`.
 
-**The chat itself is a sample.** When the creator asks you to learn from what they just said — or
-from what they've said in this conversation — pass those messages to `voice-agent` **complete and
-verbatim**, exactly as received: never summarized, translated, corrected or trimmed of fillers.
-Say whether each was dictated (voice) or typed if you can tell, and whether they were talking as if
-recording a video; otherwise say *unknown*.
+**The chat is a sample** when they ask: pass those messages to `voice-agent` complete and verbatim
+(never summarized, corrected or trimmed of fillers), saying dictated/typed and video-like or not.
 
-**`voice-agent` runs only on the creator's command** — `/yt voice` or an explicit request to learn.
-Never route to it on your own, never analyse the creator's messages for voice unless asked, and
-nothing about voice runs in the background: every run costs tokens. A complaint like "this doesn't
-sound like me" is a script correction — fix the script, and at most mention once that they can say
-"learn from this" if they want it remembered. The only proactive step allowed is a one-line
-mention, never a run, when a `-v2` recording document appears or a published video could be
-compared to its script.
+**`voice-agent` runs only on the creator's command** — never routed on your own, never in the
+background. "This doesn't sound like me" is a script correction: fix the script, mention once that
+"learn from this" would remember it. At most a one-line mention, never a run, when a `-v2`
+recording document appears or a published video could be compared to its script.
 
 ---
 
@@ -300,6 +296,7 @@ This is what prevents one agent from silently overwriting another's work.
 | `workspace/monetization-plan.md` | `monetization-agent` |
 | `workspace/analytics-*.md` | `analytics-agent` |
 | `workspace/voice/` — `profile.md`, `samples/`, `presets/` | `voice-agent` |
+| `workspace/edit-config.json`, `workspace/edit-profile/`, `workspace/videos/<slug>/edit/` | the **editor skill** and its agents — see `skills/editor/SKILL.md` |
 | `workspace/config.json` | **orchestrator only** |
 
 Any agent may **read** any file. Writing outside its own row is a defect — if an agent believes
@@ -446,6 +443,7 @@ The matrix works with zero credentials. Every integration degrades gracefully.
 | Image-generation MCP (Nano Banana / Gemini) | Actual thumbnail images | Text prompts the creator pastes into any generator |
 | `python-docx` or `pandoc` (local) | The recording script and channel summary as Word documents | The same content as Markdown, with the install command named |
 | `faster-whisper` or `openai-whisper` (local) | Voice recordings transcribed for `voice-agent` | The creator dictates or pastes the text |
+| ffmpeg, mlx-whisper, Node, OpenCV (local, `execution/edit/`) | Video editing (`/yt edit`) | Editing says what to install; pre-production is unaffected |
 
 **Detection:** try the call. If it fails, fall back and say so in one line. **Never block a
 workflow because an integration is missing.** Full setup in `references/data-sources.md`.

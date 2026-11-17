@@ -129,6 +129,7 @@ The `execution/` folder wraps the APIs above in a small, predictable command-lin
 | `fetch_video_analytics.py` | Private metrics for an owned channel | OAuth |
 | `build_reader_doc.py` | Renders creator-facing Markdown as a Word document; never overwrites a hand-edited one | `python-docx` or `pandoc` — otherwise the Markdown stays |
 | `transcribe_audio.py` | Verbatim local transcript of a creator's voice recording, fillers kept, for `voice-agent` | `faster-whisper` or `openai-whisper` — otherwise the creator pastes text |
+| `edit/*.py` | The video editor (`/yt edit`): footage inventory, transcription, sync, cuts, camera curves, sound placement, FCPXML build and read-back — see `execution/edit/requirements.txt` and `references/editing/setup.md` | ffmpeg, the editing virtualenv (numpy, mlx-whisper, faster-whisper, optional OpenCV), Node.js for animations — missing pieces stop only that editing step |
 | `utils/youtube_auth.py` | Resolves the API key and the OAuth token | — |
 | `utils/quota_tracker.py` | Tracks unit consumption and warns before exhaustion | — |
 
