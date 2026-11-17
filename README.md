@@ -538,4 +538,4 @@ system carries approval gates with explicit state.
 
 MIT — see [LICENSE](LICENSE).
 
--->  Created by Pedro Melo  <--
+Created by Pedro Melo
