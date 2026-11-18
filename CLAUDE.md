@@ -14,9 +14,10 @@ Guidance for anyone (human or agent) editing this plugin. The user-facing docume
                         │  delegates with an explicit prompt
                         ▼
   Layer 2   agents/*.md
-            16 subagents. Each owns its deliverable — two of them also own a
-            derived creator-facing view of it, see below. Agents do not call
-            each other; the orchestrator fans them out and collects results.
+            16 pre-production subagents. Each owns its deliverable — two of them
+            also own a derived creator-facing view of it, see below. Agents do not
+            call each other; the orchestrator fans them out and collects results.
+            (+ skills/editor/SKILL.md and its 8 editing agents — see "Editing".)
                         │  loads, on demand, only what it needs
                         ▼
   Layer 3   references/*.md  +  templates/channel-types/*.md  +  templates/outputs/*
@@ -113,10 +114,24 @@ and the agent silently does not exist.
   is present and falls back to `pandoc`, then to leaving the Markdown in place. An optional
   dependency is only acceptable when its absence degrades the output rather than blocking it.
 
+**Exception — `execution/edit/`.** Video editing cannot run on the standard library. Scripts there
+may depend on `ffmpeg`/`ffprobe` and `xmllint` (system tools), `numpy`, `mlx-whisper` and
+`faster-whisper` (transcription, speech detection), `opencv-python-headless` (face tracking), and
+Node.js running a **pinned** `hyperframes` version through `npx`. They are listed in
+`execution/edit/requirements.txt` and installed into a dedicated virtualenv **outside the plugin**
+(`~/.local/share/youtube-agent-matrix/edit-venv`), never into the system Python, never inside the
+plugin folder, and only after the creator says yes (`setup_check.py` lists what is missing). Everything
+else above still applies: JSON on stdout, no stack traces, a module docstring, `--help`. "Degrade
+gracefully" means here: a missing dependency stops **that editing step** with the exact install
+command — it never affects pre-production, and no step silently falls back to a weaker method
+(a fallback that exists, like CPU transcription, is announced). Library modules in that folder
+(`common.py`, `timebase.py`, `audio_tools.py`, `easing.py`) have no CLI of their own.
+
 Compile-check before committing:
 
 ```bash
-python3 -m py_compile execution/*.py execution/utils/*.py
+python3 -m py_compile execution/*.py execution/utils/*.py execution/edit/*.py
+python3 -m unittest discover -s execution/edit/tests      # needs ffmpeg + numpy
 ```
 
 **7. Everything is written in English.** Source files, comments, docstrings, agent prompts. The
@@ -295,6 +310,39 @@ Rules when touching either pair:
 Adding a third pair is a real decision, not a freebie: every derived file is another thing that
 can fall out of sync. Do it only when asked.
 
+## Editing
+
+`/yt edit` hands over to a second skill, `skills/editor/SKILL.md`, which runs on the main thread like
+the orchestrator: it talks to the creator, holds the editing state and runs **checkpoints** (not gates —
+the orchestrator keeps its three). It delegates one stage at a time to eight agents: `footage-agent`,
+`cut-agent`, `edit-style-agent`, `motion-plan-agent`, `asset-agent`, `motion-render-agent`,
+`camera-agent`, `sound-agent`. The orchestrator only routes to the editor; it does not list those
+agents.
+
+The rules that keep it coherent:
+
+1. **Agents decide, scripts calculate.** No agent writes FCPXML, computes a frame or edits a script's
+   output. All time goes through `execution/edit/timebase.py` (exact fractions, no floats).
+2. **One writer per file**, as everywhere: each stage owns its own folder under
+   `workspace/videos/<slug>/edit/`; `edit-state.json`, deliveries and returns belong to the editor. The
+   ownership table lives in `skills/editor/SKILL.md`.
+3. **Craft vs taste.** Craft lives in `references/editing/` (constants marked "craft default, overridden
+   by the edit profile" — they are not platform numbers, so rule 3 does not send them to
+   `benchmarks.md`). Taste lives in the creator's `workspace/edit-profile/`. A craft learning from a
+   creator reaches this repository through a maintainer, never at runtime.
+4. **The creator's media is read-only.** Never moved, renamed, copied or deleted; nothing written inside
+   a `.fcpbundle`; deliveries versioned, never overwritten. No computer use to drive Final Cut.
+5. **Final Cut delivery is validated** with `xmllint --dtdvalid` against the DTD of the same FCPXML
+   version, read from the installed app (never committed here — it is Apple's). Without it a delivery
+   is reported unvalidated, never silently checked a weaker way. Layout, roles and time rules:
+   `references/editing/delivery-fcpxml.md`. When Final Cut behaves differently than expected, copy what
+   it exports; do not guess.
+6. **Tests are never weakened** to make something pass. `execution/edit/tests/` must pass, with the DTD
+   (`FCPXML_DTD=…`) before a release.
+7. **Attribution.** The workflow and craft guides are adapted from fluxo-de-edicao (MIT, Lucas Leite):
+   every adapted file names its source at the top, and `THIRD_PARTY_NOTICES.md` carries the licence.
+   Translate and adapt; never paste the original text.
+
 ## Maintenance
 
 **Platform numbers decay.** YouTube changes what it counts, how it counts it and what it rewards,
@@ -316,12 +364,14 @@ A sensible review pass:
 Before any release, the short checklist:
 
 ```bash
-python3 -m py_compile execution/*.py execution/utils/*.py   # scripts compile
-wc -l skills/orchestrator/SKILL.md                          # under 500
+python3 -m py_compile execution/*.py execution/utils/*.py execution/edit/*.py   # scripts compile
+FCPXML_DTD=<path> python3 -m unittest discover -s execution/edit/tests      # editing tests pass
+wc -l skills/orchestrator/SKILL.md skills/editor/SKILL.md   # each under 500
+wc -l references/editing/*.md                               # each around 260 or less
 wc -l references/*.md                                       # each around 260 or less;
                                                             # benchmarks.md exempt (rule 2)
 grep -L 'name:' agents/*.md                                 # every agent has frontmatter
 ```
 
 Then confirm each agent's `name` still equals its filename stem, and that any agent added or
-renamed appears in the orchestrator's tables and in `README.md`.
+renamed appears in the orchestrator's tables (editing agents: in the editor's table) and in `README.md`.

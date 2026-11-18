@@ -61,3 +61,8 @@ Desktop.ini
 *.swo
 .idea/
 .vscode/
+
+# ---------------------------------------------------------------------------
+# Working notes for in-progress goals (plans, progress diaries). Local only.
+# ---------------------------------------------------------------------------
+goals/

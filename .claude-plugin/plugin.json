@@ -1,7 +1,7 @@
 {
   "name": "youtube-agent-matrix",
-  "version": "1.4.0",
-  "description": "A complete YouTube channel operating system for Claude Code. Sixteen specialized subagents covering channel strategy, health audits, competitor intelligence, research, publishable research reports, ideation, content calendars, hooks and retention-engineered scripts written in the creator's own learned voice, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics — coordinated by an orchestrator with human-approval gates. Works for any channel, any niche, any language.",
+  "version": "1.5.0",
+  "description": "A complete YouTube channel operating system for Claude Code. Sixteen specialized subagents covering channel strategy, health audits, competitor intelligence, research, publishable research reports, ideation, content calendars, hooks and retention-engineered scripts written in the creator's own learned voice, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics — coordinated by an orchestrator with human-approval gates — plus a video editor that turns raw footage into a Final Cut Pro project with cuts, animations, camera moves, sound and music on separate layers. Works for any channel, any niche, any language.",
   "license": "MIT",
   "keywords": [
     "youtube",
@@ -12,6 +12,9 @@
     "shorts",
     "monetization",
     "analytics",
-    "content-strategy"
+    "content-strategy",
+    "video-editing",
+    "final-cut-pro",
+    "fcpxml"
   ]
 }

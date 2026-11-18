@@ -180,6 +180,11 @@ Follow `templates/outputs/script.md`. Mandatory in every variant:
 - **`[INTERRUPT]`** markers at the required frequency (`benchmarks.md` §2)
 - **`[EMPHASIS]`** on the two or three lines carrying the whole video
 - **`[PAUSE]`** where a beat needs air
+- **`[BEAT]`** on a pause that is part of a joke or a dramatic beat — the editor keeps it at full
+  length instead of tightening it
+- **`[SCREEN: …]`** where a screen recording should be shown, and **`[DATA: … — source]`** where a
+  number or fact belongs on screen, with its source from the research dossier or report. Both are
+  starting points for the editing stage's motion plan
 - **Open loop** named in the first minute, paid off before the close — mark both
 - **`⚠️ SPOILERS`** block when applicable: spoken warning + on-screen card + chapter marker
 - **Brand lines** from `channel-profile.md` §6b, when the channel has them — **verbatim**, never
@@ -284,6 +289,8 @@ change how the page looks around those words. You are not allowed to change the 
 | `[INTERRUPT] cut / punch-in` | "Cut in closer for this part." |
 | `[EMPHASIS]` on a line | A single direction line above it: "This is the line to land." |
 | `[PAUSE]` | "Leave a beat here." |
+| `[BEAT]` | "Hold this pause — it is part of the joke." |
+| `[SCREEN: the settings page]` / `[DATA: …]` | "On screen: the settings page." — a `>` line; sources stay in the technical script |
 | `**Claim:** … **Evidence:** F3 from the dossier` | Dropped entirely — it is reasoning, not performance |
 | `## {04:12} BEAT 3 — Escalation` | `## Scene N — cut from "⟨previous beat's visual⟩" to "⟨this beat's visual⟩" — around 4 min` |
 | `⚠️ verify` on a line | One plain sentence in the "Before you record" section |
