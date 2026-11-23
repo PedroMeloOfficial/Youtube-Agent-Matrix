@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="YouTube Agent Matrix — AI agents that plan, write and edit your YouTube videos, for Claude Code and OpenAI Codex" width="100%">
+</p>
+
 [![validate](https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix/actions/workflows/validate.yml/badge.svg)](https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
