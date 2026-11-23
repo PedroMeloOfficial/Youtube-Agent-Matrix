@@ -1,0 +1,39 @@
+{
+  "name": "youtube-agent-matrix",
+  "version": "1.5.1",
+  "description": "A complete YouTube channel operating system for Claude Code and OpenAI Codex. Sixteen specialized subagents covering channel strategy, health audits, competitor intelligence, research, publishable research reports, ideation, content calendars, hooks and retention-engineered scripts written in the creator's own learned voice, thumbnails, SEO, upload metadata, Shorts, cross-platform repurposing, monetization and analytics — coordinated by an orchestrator with human-approval gates — plus a video editor that turns raw footage into a Final Cut Pro project with cuts, animations, camera moves, sound and music on separate layers. Works for any channel, any niche, any language.",
+  "author": {
+    "name": "Pedro Melo",
+    "url": "https://github.com/PedroMeloOfficial"
+  },
+  "homepage": "https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix",
+  "repository": "https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix",
+  "license": "MIT",
+  "keywords": [
+    "youtube",
+    "creator",
+    "seo",
+    "retention",
+    "thumbnail",
+    "shorts",
+    "monetization",
+    "analytics",
+    "content-strategy",
+    "video-editing",
+    "final-cut-pro",
+    "fcpxml"
+  ],
+  "skills": "./codex/skills/",
+  "interface": {
+    "displayName": "YouTube Agent Matrix",
+    "shortDescription": "YouTube pre-production with 24 agents, plus a video editor for Final Cut Pro.",
+    "developerName": "Pedro Melo",
+    "category": "Productivity",
+    "websiteURL": "https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix",
+    "defaultPrompt": [
+      "$yt setup",
+      "$yt script",
+      "$yt edit"
+    ]
+  }
+}

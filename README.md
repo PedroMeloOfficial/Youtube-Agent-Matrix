@@ -38,6 +38,32 @@ Convenient while editing the matrix itself, since your changes are live with no 
 `google-api-python-client` are needed *only* if you want the optional live-data scripts in
 `execution/`.
 
+
+### Using it in OpenAI Codex (beta)
+
+The same plugin also runs in **OpenAI Codex** — the desktop app or the CLI that come with a ChatGPT
+plan. It does **not** run in the plain ChatGPT chat on the web: it needs to read and write files and run
+scripts on your computer.
+
+```bash
+git clone https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix.git
+cd Youtube-Agent-Matrix
+bash codex/install.sh
+```
+
+The script copies the 24 agents into `~/.codex/agents/` (a Codex plugin cannot ship agents itself) and
+registers the folder as a plugin marketplace. Install **YouTube Agent Matrix** from the Plugins
+directory, open Codex in the folder where you want your channel's `workspace/`, and type `$yt setup`.
+Every command works the same with `$` instead of `/`: `$yt script`, `$yt edit`, and so on.
+
+- Turn on web search in Codex: research, SEO and competitor agents depend on it.
+- After `git pull`, run `bash codex/install.sh` again. To remove the agents:
+  `bash codex/install.sh --uninstall`.
+- **Beta.** The Claude Code version is the reference and is what gets tested first. In Codex each agent
+  is told which tools it may use, but Codex cannot enforce that per agent, and model choice follows your
+  Codex default (Opus agents run with high reasoning effort, Sonnet agents with medium).
+- The Codex files (`codex/`, `.codex-plugin/`, `.agents/plugins/`) are generated from the Claude
+  files by `codex/build_codex.py`. Never edit them by hand.
 ---
 
 ## First run
@@ -315,6 +341,10 @@ YoutubeAgents_Pipeline/
 ├── .claude-plugin/
 │   ├── plugin.json              # plugin manifest
 │   └── marketplace.json         # lets this folder register as its own marketplace
+├── .codex-plugin/plugin.json    # Codex manifest (generated)
+├── .agents/plugins/             # Codex marketplace (generated)
+├── codex/                       # Codex agents and skills (generated), install.sh, build_codex.py
+├── AGENTS.md                    # pointer to CLAUDE.md for Codex working on this repo
 ├── skills/
 │   ├── orchestrator/
 │   │   └── SKILL.md             # startup sequence, routing, gates, state model
