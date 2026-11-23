@@ -1,0 +1,20 @@
+{
+  "name": "youtube-agent-matrix",
+  "interface": {
+    "displayName": "YouTube Agent Matrix"
+  },
+  "plugins": [
+    {
+      "name": "youtube-agent-matrix",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

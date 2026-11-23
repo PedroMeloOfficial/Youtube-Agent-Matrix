@@ -361,6 +361,16 @@ A sensible review pass:
   worth more than a complete-looking list of half-sourced numbers, because it is what stops an
   agent from inventing one.
 
+### The Codex version
+
+The plugin also ships for OpenAI Codex. The Claude Code files stay the single source of truth;
+`codex/build_codex.py` generates everything Codex needs from them — one TOML custom agent per
+`agents/*.md` (Claude model → Codex reasoning effort: opus → high, sonnet → medium; no Codex model
+pinned), each skill with a short "Running in OpenAI Codex" preamble, `commands/yt.md` as a `$yt` skill,
+and the two Codex manifests. Never edit a generated file and never bend a Claude file to suit Codex: if
+Codex needs something different, the generator's preamble is where it goes. Any change to an agent, a
+skill, the command or `plugin.json` needs a rebuild — the Codex tests fail until it is done.
+
 Before any release, the short checklist:
 
 ```bash
@@ -371,6 +381,8 @@ wc -l references/editing/*.md                               # each around 260 or
 wc -l references/*.md                                       # each around 260 or less;
                                                             # benchmarks.md exempt (rule 2)
 grep -L 'name:' agents/*.md                                 # every agent has frontmatter
+python3 codex/build_codex.py                                # regenerate the Codex version
+python3 -m unittest discover -s codex/tests                 # Codex files current and valid
 ```
 
 Then confirm each agent's `name` still equals its filename stem, and that any agent added or
