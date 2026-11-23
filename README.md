@@ -1,3 +1,12 @@
+[![validate](https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix/actions/workflows/validate.yml/badge.svg)](https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix/actions/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![release](https://img.shields.io/github/v/release/PedroMeloOfficial/Youtube-Agent-Matrix?color=ff0033)](https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix/releases/latest)
+[![agents](https://img.shields.io/badge/agents-24-ff0033.svg)](#the-16-agents)
+[![works with](https://img.shields.io/badge/works%20with-Claude%20Code%20%7C%20OpenAI%20Codex-5a45ff.svg)](#install)
+[![edits to](https://img.shields.io/badge/edits%20to-Final%20Cut%20Pro-555555.svg)](#editing-your-video-in-final-cut-pro)
+[![stars](https://img.shields.io/github/stars/PedroMeloOfficial/Youtube-Agent-Matrix?style=flat&color=ff5277)](https://github.com/PedroMeloOfficial/Youtube-Agent-Matrix/stargazers)
+
 # YouTube Agent Matrix
 
 A complete YouTube production system for [Claude Code](https://claude.com/claude-code): an

@@ -1,0 +1,61 @@
+name: validate
+
+# Runs the release checklist from CLAUDE.md on every push and pull request.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q ffmpeg libxml2-utils
+          python -m pip install -q numpy
+
+      - name: Scripts compile
+        run: python -m py_compile execution/*.py execution/utils/*.py execution/edit/*.py codex/*.py
+
+      - name: Skills under 500 lines
+        run: |
+          for f in skills/*/SKILL.md; do
+            n=$(wc -l < "$f"); echo "$f: $n"
+            [ "$n" -lt 500 ] || { echo "::error file=$f::$n lines, the limit is 500"; exit 1; }
+          done
+
+      - name: Agents have frontmatter and name = filename
+        run: |
+          for f in agents/*.md; do
+            name=$(sed -n 's/^name: *//p' "$f" | head -1)
+            [ "$name" = "$(basename "$f" .md)" ] || { echo "::error file=$f::name '$name' does not match the file name"; exit 1; }
+            grep -q '^model:' "$f" || { echo "::error file=$f::no model"; exit 1; }
+          done
+          echo "$(ls agents/*.md | wc -l) agents OK"
+
+      - name: Plugin manifests are valid JSON
+        run: |
+          for f in .claude-plugin/*.json .codex-plugin/*.json .agents/plugins/*.json; do
+            python -m json.tool "$f" > /dev/null && echo "$f OK"
+          done
+
+      - name: Codex version is current and valid
+        run: |
+          python codex/build_codex.py --check
+          python -m unittest discover -s codex/tests -v
+
+      - name: Editing tests
+        # Final Cut's DTD is Apple's and is not in the repo, so DTD validation is skipped here;
+        # every other editing test runs.
+        run: python -m unittest discover -s execution/edit/tests -v
